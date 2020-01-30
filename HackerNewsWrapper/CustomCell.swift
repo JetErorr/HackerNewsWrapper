@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-class CustomCell : UITableViewCell{
-    
+class CustomCell: UITableViewCell {
+
     @IBOutlet weak var newsTitle: UILabel!
-    
+
     @IBOutlet weak var newsAuthor: UILabel!
     @IBOutlet weak var newsScore: UILabel!
 

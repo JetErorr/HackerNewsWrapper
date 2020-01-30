@@ -1,0 +1,4 @@
+excluded:
+    - Pods
+    - HackerNewsWrapper/AppDelegate.swift
+    - HackerNewsWrapper/SceneDelegate.swift

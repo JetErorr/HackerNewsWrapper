@@ -3,4 +3,5 @@ use_frameworks!
 
 target 'HackerNewsWrapper' do
     pod 'SwiftyJSON', '~> 4.0'
+    pod 'SwiftLint'
 end
