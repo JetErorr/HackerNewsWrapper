@@ -9,27 +9,32 @@
 // Model for the MVVM pattern
 import Foundation
 
-struct NewsModel {
-    //swiftlint:enable all
+struct NewsModel: Codable {
     let title: String
     let author: String
-    let time: String
+    let time: Double
     let score: Int
-    let comments: Int
-    
-    init() {
-        title = ""
-        author = ""
-        time = ""
-        score = Int()
-        comments = Int()
+    let kids: [Int]?
+    let url: String?
+    var since: String? = String()
+
+    enum CodingKeys: String, CodingKey {
+        case title
+        case author = "by"
+        case time
+        case score
+        case kids
+        case url
     }
-    
-    init(title: String, author: String, time: String, score: Int, comments: Int) {
+
+    init(_ title: String, _ author: String, _ time: Double,
+         _ score: Int, _ kids: [Int], _ url: String, _ since: String) {
         self.title = title
         self.author = author
         self.time = time
         self.score = score
-        self.comments = comments
+        self.kids = kids
+        self.url = url
+        self.since = since
     }
 }

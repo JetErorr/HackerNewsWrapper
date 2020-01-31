@@ -10,28 +10,35 @@
 import Foundation
 
 struct NewsViewModel {
-    //swiftlint:enable all
-    // Create Model, Get Data from FetchAndParse, Set Data into Model, Return Model
+    // 1. Create Model, 2.Get Data from NewsService, 3. Set Data into Model & 4.Return Model
 
     // Get 10 news entries and return a [NewsModel]
-    func fetchModel(completion: @escaping ([NewsModel]) -> Void) {
-        var newsModel: [NewsModel] = []
-        var newsIndices = [Int]()
+    func fetchModel(_ category: String, completion: @escaping ([NewsModel]) -> Void) {
+
         let myGroup = DispatchGroup()
+        let newsService = NewsService()
+
+        // Create Model
+        var newsIndices = [Int]()
+        var newsModel: [NewsModel] = []
 
         // Get indices for the news item
-        NewsService().refreshNewsList { (indexArray) in
+        newsService.refreshNewsList(category) { (indexArray) in
             newsIndices = indexArray
 
             for newsID in 0...9 {
-
                 myGroup.enter()
-                NewsService().fetchNews(newsID: newsIndices[newsID] ) { (newsItem) in
+
+                //Get Data from NewsService
+                newsService.fetchNews(newsID: newsIndices[newsID] ) { (newsItem) in
+
+                    // Set data into Model
                     newsModel.append(newsItem)
                     myGroup.leave()
                 }
             }
             myGroup.notify(queue: .main) {
+                // Return Model
                 completion(newsModel)
             }
         }

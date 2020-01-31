@@ -8,85 +8,93 @@
 
 // Service for fetching and parsing JSON data
 import Foundation
-import SwiftyJSON
 
 class NewsService {
-    //swiftlint:enable all
-    
+
+    let decoder = JSONDecoder()
+
     // Get indices for new news items
-    func refreshNewsList(completion: @escaping ([Int]) -> Void) {
-        
-        var indexArray: JSON = JSON()
-        
+    func refreshNewsList(_ category: String, completion: @escaping ([Int]) -> Void) {
+
         // URL for getting top 500 news IDs
-        let indexUrl = URL(string: "https://hacker-news.firebaseio.com/v0/topstories.json")!
-        
-        URLSession.shared.dataTask(with: indexUrl) { data, _, _ in
-            if let data = data {
+        // Add Configurable code for things like New, Best, Job Stories, Ask, Show, etc and other things
+        let indexURLString = "https://hacker-news.firebaseio.com/v0/\(category).json"
+        guard let indexURL = URL(string: indexURLString) else {
+            print("ERROR: Invalid index URL")
+            return
+        }
+
+        URLSession.shared.dataTask(with: indexURL) { data, _, err in
+            if let err = err {
+                print("ERROR: Couldn't fetch index")
+                print(err.localizedDescription)
+//                completion([0]) // Result
+            } else if let data = data {
                 do {
-                    try indexArray = JSON(data: data)
-                    
-                    // Returning an array of indices // NEXT: Try to avoid force unwrapping / downcasting
-                    completion(indexArray.arrayObject as! [Int])
+                    let index = try self.decoder.decode([Int].self, from: data)
+                    completion(index)
                 } catch {
-                    print("Index Fetch err")
+                    print("ERROR: Couldn't load news index")
+                    print(indexURLString)
+                    print(error.localizedDescription)
                 }
-            } else {
-                print("Index Data Fetch err")
             }
         }.resume()
     }
-    
+
     // Refactoring names
     func fetchNews(newsID: Int, completion: @escaping (NewsModel) -> Void) {
-        
+
         // Insert newsID index in the newsURL
         let newsURLString = "https://hacker-news.firebaseio.com/v0/item/\(newsID).json"
-        let newsURL = URL(string: newsURLString)!
-        
-        URLSession.shared.dataTask(with: newsURL) { data, _, _ in
-            if let data = data {
-                
-                // Convert json data to presentable strings and integers
-                do {
-                    // Parse News JSON
-                    let news = try JSON(data: data)
+        guard let newsURL = URL(string: newsURLString) else {
+            print("ERROR: Invalid news URL")
+            return
+        }
 
-                    // Parse News Title
-                    let title = news["title"].rawString()!
-                    
-                    // Parse News Author
-                    let author = news["by"].rawString()!
-                    
-                    // Parse number of Comments
-                    let comments = news["kids"].count
-                    
-                    // Parse Score number
-                    let score = Int(news["score"].rawString()!)!
-                    
-                    // Calculating time gap from UNIX time given in json data
-                    var secondsAgo = Int(Date().timeIntervalSince1970 - Double(news["time"].double!))
-                    
+        URLSession.shared.dataTask(with: newsURL) { data, _, err in
+            if let err = err {
+                print("ERROR: Couldn't fetch news item")
+                print(err.localizedDescription)
+//                completion()  // Result
+            }
+            if let data = data {
+                do {
+                    let news = try self.decoder.decode(NewsModel.self, from: data)
+
                     // Formatting seconds into human readable time strings
-                    var timeAgo = String()
-                    if secondsAgo > 3600 {
-                        secondsAgo /= 3600
-                        timeAgo = "\(secondsAgo) hours/s ago"
-                    } else if secondsAgo > 60 {
-                        secondsAgo /= 60
-                        timeAgo = "\(secondsAgo) minute/s ago"
-                    } else if secondsAgo < 60 {
-                        timeAgo = "\(secondsAgo) second/s ago"
-                    }
-                    
-                    // Returning new NewsModel with data parsed from the News JSON
-                    completion(NewsModel(title: title, author: author, time: timeAgo, score: score, comments: comments))
+                    let since = Date().offsetFrom(date: Date(timeIntervalSince1970: news.time))
+
+                    // Returning a new object with values from the fetch
+                    completion(
+                        NewsModel(news.title, news.author, news.time,
+                                  news.score, news.kids ?? [], news.url ?? "", since)
+                    )
                 } catch {
-                    print("News Fetch err")
+                    print(newsURL)
+                    print("ERROR: Couldn't load news item")
                 }
-            } else {
-                print("News Data Fetch err")
             }
         }.resume()
+    }
+}
+
+extension Date {
+
+    func offsetFrom(date: Date) -> String {
+
+        let dayHourMinuteSecond: Set<Calendar.Component> = [.day, .hour, .minute, .second]
+        let difference = NSCalendar.current.dateComponents(dayHourMinuteSecond, from: date, to: self)
+
+        let seconds = "\(difference.second ?? 0)s"
+        let minutes = "\(difference.minute ?? 0)m" + " " + seconds
+        let hours = "\(difference.hour ?? 0)h" + " " + minutes
+        let days = "\(difference.day ?? 0)d" + " " + hours
+
+        if let day = difference.day, day          > 0 { return days }
+        if let hour = difference.hour, hour       > 0 { return hours }
+        if let minute = difference.minute, minute > 0 { return minutes }
+        if let second = difference.second, second > 0 { return seconds }
+        return ""
     }
 }
