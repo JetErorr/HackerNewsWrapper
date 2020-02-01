@@ -14,7 +14,7 @@ class NewsService {
     let decoder = JSONDecoder()
 
     // Get indices for new news items
-    func refreshNewsList(_ category: String, completion: @escaping ([Int]) -> Void) {
+    func refreshNewsList(_ category: String, completion: @escaping (Result<[Int], Error>) -> Void) {
 
         // URL for getting top 500 news IDs
         // Add Configurable code for things like New, Best, Job Stories, Ask, Show, etc and other things
@@ -26,24 +26,32 @@ class NewsService {
 
         URLSession.shared.dataTask(with: indexURL) { data, _, err in
             if let err = err {
+
                 print("ERROR: Couldn't fetch index")
-                print(err.localizedDescription)
-//                completion([0]) // Result
+                print("Service: \(err.localizedDescription)")
+
+                completion(.failure(err))
+
             } else if let data = data {
+
                 do {
                     let index = try self.decoder.decode([Int].self, from: data)
-                    completion(index)
+                    completion(.success(index))
+
                 } catch {
+
                     print("ERROR: Couldn't load news index")
                     print(indexURLString)
-                    print(error.localizedDescription)
+                    print("Service: \(error.localizedDescription)")
+
+                    completion(.failure(error))
                 }
             }
         }.resume()
     }
 
     // Refactoring names
-    func fetchNews(newsID: Int, completion: @escaping (NewsModel) -> Void) {
+    func fetchNews(newsID: Int, completion: @escaping (Result<NewsModel, Error>) -> Void) {
 
         // Insert newsID index in the newsURL
         let newsURLString = "https://hacker-news.firebaseio.com/v0/item/\(newsID).json"
@@ -55,8 +63,8 @@ class NewsService {
         URLSession.shared.dataTask(with: newsURL) { data, _, err in
             if let err = err {
                 print("ERROR: Couldn't fetch news item")
-                print(err.localizedDescription)
-//                completion()  // Result
+                print("Service: \(err.localizedDescription)")
+                completion(.failure(err))
             }
             if let data = data {
                 do {
@@ -66,13 +74,15 @@ class NewsService {
                     let since = Date().offsetFrom(date: Date(timeIntervalSince1970: news.time))
 
                     // Returning a new object with values from the fetch
-                    completion(
+                    completion(.success(
                         NewsModel(news.title, news.author, news.time,
-                                  news.score, news.kids ?? [], news.url ?? "", since)
+                                  news.score, news.kids ?? [], news.url ?? "", since))
                     )
                 } catch {
                     print(newsURL)
                     print("ERROR: Couldn't load news item")
+                    print("Service: \(error)")
+                    completion(.failure(error))
                 }
             }
         }.resume()
