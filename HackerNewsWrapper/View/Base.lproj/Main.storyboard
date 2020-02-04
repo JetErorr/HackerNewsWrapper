@@ -74,6 +74,7 @@
                                             <outlet property="newsDesc" destination="Xew-cY-NjR" id="0ap-Qg-FyA"/>
                                             <outlet property="newsTime" destination="iAE-aM-btf" id="tnH-jA-dpM"/>
                                             <outlet property="newsTitle" destination="Q9F-7z-Wnq" id="gzO-Js-Cgm"/>
+                                            <segue destination="tWi-5U-vAT" kind="show" identifier="detailSeg" id="wUq-sb-L8n"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -109,6 +110,96 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mp6-jL-YjR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1700" y="-921"/>
+        </scene>
+        <!--Detail View Controller-->
+        <scene sceneID="nlI-BF-bzv">
+            <objects>
+                <viewController id="tWi-5U-vAT" customClass="DetailViewController" customModule="HackerNewsWrapper" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ShB-yy-AZ8">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Aj-Tb-ihr">
+                                <rect key="frame" x="8" y="7.9999999999999982" width="398" height="20.333333333333329"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PSu-IS-Nhj">
+                                <rect key="frame" x="8" y="36.333333333333336" width="398" height="20.333333333333336"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="kHM-N6-Kv0">
+                                <rect key="frame" x="8" y="64.666666666666671" width="398" height="90.000000000000014"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tff-iS-eao">
+                                        <rect key="frame" x="0.0" y="0.0" width="398" height="30"/>
+                                        <state key="normal" title="Author"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tzi-BJ-5WJ">
+                                        <rect key="frame" x="0.0" y="30" width="398" height="30"/>
+                                        <state key="normal" title="HNArticle"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YEd-kK-kVQ">
+                                        <rect key="frame" x="0.0" y="60" width="398" height="30"/>
+                                        <state key="normal" title="URL"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.borderWidth number 1" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="lnN-l3-zju">
+                                <rect key="frame" x="8" y="162.66666666666666" width="398" height="20.333333333333343"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Score" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H8w-WG-oNi">
+                                        <rect key="frame" x="0.0" y="0.0" width="197" height="20.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comments" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Qe-nX-Lpg" userLabel="Comment Number">
+                                        <rect key="frame" x="201" y="0.0" width="197" height="20.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="8yt-ke-HQD" firstAttribute="trailing" secondItem="kHM-N6-Kv0" secondAttribute="trailing" constant="8" id="AqT-fs-yaR"/>
+                            <constraint firstItem="8yt-ke-HQD" firstAttribute="trailing" secondItem="PSu-IS-Nhj" secondAttribute="trailing" constant="8" id="IGh-Xd-XpW"/>
+                            <constraint firstItem="PSu-IS-Nhj" firstAttribute="top" secondItem="9Aj-Tb-ihr" secondAttribute="bottom" constant="8" id="KWR-Cy-yhY"/>
+                            <constraint firstItem="9Aj-Tb-ihr" firstAttribute="top" secondItem="8yt-ke-HQD" secondAttribute="top" constant="8" id="UlM-zU-izF"/>
+                            <constraint firstItem="8yt-ke-HQD" firstAttribute="trailing" secondItem="lnN-l3-zju" secondAttribute="trailing" constant="8" id="ZPB-gW-eOo"/>
+                            <constraint firstItem="9Aj-Tb-ihr" firstAttribute="leading" secondItem="8yt-ke-HQD" secondAttribute="leading" constant="8" id="beo-MX-Mxu"/>
+                            <constraint firstItem="kHM-N6-Kv0" firstAttribute="top" secondItem="PSu-IS-Nhj" secondAttribute="bottom" constant="8" id="cGw-uW-Q0z"/>
+                            <constraint firstItem="lnN-l3-zju" firstAttribute="top" secondItem="kHM-N6-Kv0" secondAttribute="bottom" constant="8" id="hKN-gQ-OwC"/>
+                            <constraint firstItem="kHM-N6-Kv0" firstAttribute="leading" secondItem="8yt-ke-HQD" secondAttribute="leading" constant="8" id="lzQ-6X-3ch"/>
+                            <constraint firstItem="PSu-IS-Nhj" firstAttribute="leading" secondItem="8yt-ke-HQD" secondAttribute="leading" constant="8" id="nCf-ek-xy0"/>
+                            <constraint firstItem="lnN-l3-zju" firstAttribute="leading" secondItem="8yt-ke-HQD" secondAttribute="leading" constant="8" id="suU-Dc-soY"/>
+                            <constraint firstItem="8yt-ke-HQD" firstAttribute="trailing" secondItem="9Aj-Tb-ihr" secondAttribute="trailing" constant="8" id="yTY-hn-Vah"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="8yt-ke-HQD"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="qab-xb-t9d"/>
+                    <connections>
+                        <outlet property="newsArticle" destination="tzi-BJ-5WJ" id="De5-EL-a55"/>
+                        <outlet property="newsAuthor" destination="tff-iS-eao" id="pUg-YU-JfJ"/>
+                        <outlet property="newsComments" destination="5Qe-nX-Lpg" id="rBp-aL-8hB"/>
+                        <outlet property="newsDesc" destination="PSu-IS-Nhj" id="cbl-Nq-zdM"/>
+                        <outlet property="newsScore" destination="H8w-WG-oNi" id="0SC-eE-6vA"/>
+                        <outlet property="newsTitle" destination="9Aj-Tb-ihr" id="bV1-gy-wzg"/>
+                        <outlet property="newsURL" destination="YEd-kK-kVQ" id="nZa-A2-DCX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fNW-Kp-DWL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3576.811594202899" y="-921.42857142857133"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

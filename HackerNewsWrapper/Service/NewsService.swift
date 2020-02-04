@@ -79,7 +79,7 @@ class NewsService {
                     // Returning a new object with values from the fetch
                     completion(.success(
                         NewsModel(news.title, news.desc ?? "", news.author, news.time,
-                                  news.score, news.kids ?? [], news.url ?? "", since))
+                                  news.score, news.kids ?? [], news.url ?? "", newsURLString, since))
                     )
                 } catch {
                     print(newsURL)

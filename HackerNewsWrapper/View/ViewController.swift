@@ -14,6 +14,7 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
     @IBOutlet weak var newsTable: UITableView!
 
     var newsViewModel: NewsViewModel!
+//    var detailViewController: DetailViewController!
 
     var isDataLoading = false
     var newsModel: [NewsModel] = []
@@ -44,11 +45,6 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
         loadNews()
     }
 
-    //  Implement onclick overview page
-    //    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    //
-    //    }
-
     //  Implement refresh function
     //    override func viewDidAppear(_ animated: Bool) {
     //
@@ -73,17 +69,13 @@ extension ViewController {
         let newsItem = newsModel[indexPath.row]
 
         cell.newsTitle.text = newsItem.title
-//        cell.newsAuthor.text = "By: \(newsItem.author)"
         if let time = newsItem.since {
             cell.newsTime.text = "\(time) Ago"
         }
         if let desc = newsItem.desc {
             cell.newsDesc.text = desc
         }
-//        cell.newsScore.text = "\(newsItem.score) Points"
-//        if let comments = newsItem.kids {
-//            cell.newsComments.text = "\(comments.count) Comments"
-//        }
+
         return cell
     }
 }
@@ -99,6 +91,22 @@ extension ViewController {
             if !isDataLoading {
                 print("Load new data")
                 loadNews()
+            }
+        }
+    }
+}
+
+// Segue to DetailVC
+extension ViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
+        // Edit item Function Block
+        if segue.identifier == "detailSeg" {
+            //swiftlint:disable force_cast
+            let controller = segue.destination as! DetailViewController
+            if let indexPath = newsTable.indexPath(for: sender as! UITableViewCell) {
+                // Responding to the bringBack protocol with a value for itemToEdit
+                controller.newsModel = newsModel[indexPath.row]
             }
         }
     }

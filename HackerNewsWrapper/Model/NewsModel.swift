@@ -17,6 +17,7 @@ struct NewsModel: Codable {
     let score: Int
     let kids: [Int]?
     let url: String?
+    var article: String? = String()
     var since: String? = String()
 
     enum CodingKeys: String, CodingKey {
@@ -30,7 +31,7 @@ struct NewsModel: Codable {
     }
 
     init(_ title: String, _ desc: String, _ author: String, _ time: Double,
-         _ score: Int, _ kids: [Int], _ url: String, _ since: String) {
+         _ score: Int, _ kids: [Int], _ url: String, _ article: String, _ since: String) {
         self.title = title
         self.desc = desc
         self.author = author
@@ -38,6 +39,7 @@ struct NewsModel: Codable {
         self.score = score
         self.kids = kids
         self.url = url
+        self.article = article
         self.since = since
     }
 }
