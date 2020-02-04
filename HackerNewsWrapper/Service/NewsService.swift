@@ -15,6 +15,7 @@ class NewsService {
 
     // Get indices for new news items
     func refreshNewsList(_ category: String, completion: @escaping (Result<[Int], Error>) -> Void) {
+        print(category)
 
         // URL for getting top 500 news IDs
         // Add Configurable code for things like New, Best, Job Stories, Ask, Show, etc and other things
@@ -37,6 +38,7 @@ class NewsService {
                 do {
                     let index = try self.decoder.decode([Int].self, from: data)
                     completion(.success(index))
+//                    print(index) //debug
 
                 } catch {
 
@@ -55,11 +57,12 @@ class NewsService {
 
         // Insert newsID index in the newsURL
         let newsURLString = "https://hacker-news.firebaseio.com/v0/item/\(newsID).json"
+//        let newsURLString = "https://hacker-news.firebaseio.com/v0/item/22200229.json"
+
         guard let newsURL = URL(string: newsURLString) else {
             print("ERROR: Invalid news URL")
             return
         }
-
         URLSession.shared.dataTask(with: newsURL) { data, _, err in
             if let err = err {
                 print("ERROR: Couldn't fetch news item")
@@ -75,7 +78,7 @@ class NewsService {
 
                     // Returning a new object with values from the fetch
                     completion(.success(
-                        NewsModel(news.title, news.author, news.time,
+                        NewsModel(news.title, news.desc ?? "", news.author, news.time,
                                   news.score, news.kids ?? [], news.url ?? "", since))
                     )
                 } catch {

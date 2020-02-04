@@ -9,12 +9,24 @@
 // ViewModel for the MVVM pattern
 import Foundation
 
-struct NewsViewModel {
-    // 1. Create Model, 2.Get Data from NewsService, 3. Set Data into Model & 4.Return Model
+class NewsViewModel {
 
-    // Get 10 news entries and return a [NewsModel]
-    func fetchModel(_ items: Int, _ category: String, completion: @escaping (Result<[NewsModel], Error>) -> Void) {
+    var items: Int = 0 // remove assignment
 
+    // Local use
+    let category: String
+
+    // Prop Inject
+    init(cat: String) {
+        category = cat
+    }
+    // Prop Inject
+
+    func fetchModel(completion: @escaping (Result<[NewsModel], Error>) -> Void) {
+
+        if items < 499 {
+            items += 10
+        }
         let myGroup = DispatchGroup()
         let newsService = NewsService()
 
@@ -29,11 +41,12 @@ struct NewsViewModel {
                 print("ViewModel: \(err)")
                 completion(.failure(err))
             case .success(let indexArray):
+
                 // Set fetched index as local one
                 newsIndices = indexArray
             }
 
-            for newsID in 0..<items {
+            for newsID in 0..<self.items {
                 myGroup.enter()
 
                 //Get Data from NewsService

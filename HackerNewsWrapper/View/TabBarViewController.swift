@@ -10,22 +10,31 @@ import UIKit
 
 class TabBarViewController: UITabBarController {
 
+    // Delegate : Create weak reference
+//    weak var tabDelegate: TabChecker?
+
     override func viewDidLoad() {
-//        super.viewDidLoad()
-//        self.delegate = self
-//        self.tabBarController?.selectedIndex = 1
-//        didChangeValue(for: )
-        // Do any additional setup after loading the view.
+
+        // Extension : tab changed delegate
+//        self.tabDelegate = newsViewModel
+        tabBarController?.selectedIndex = 0
+
+        if let topStory = viewControllers?[0] as? ViewController {
+            topStory.newsViewModel = NewsViewModel(cat: "topstories")
+        }
+        if let newStory = viewControllers?[1] as? ViewController {
+            newStory.newsViewModel = NewsViewModel(cat: "newstories")
+        }
+        if let bestStory = viewControllers?[2] as? ViewController {
+            bestStory.newsViewModel = NewsViewModel(cat: "beststories")
+        }
+
+        let items = tabBar.items!
+        items[0].title = "Top Stories"
+        items[0].image = UIImage(systemName: "arrow.up.circle.fill")
+        items[1].title = "New Stories"
+        items[1].image = UIImage(systemName: "pencil.circle.fill")
+        items[2].title = "Best Stories"
+        items[2].image = UIImage(systemName: "star.circle.fill")
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

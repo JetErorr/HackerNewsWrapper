@@ -11,72 +11,25 @@ import UIKit
 class ViewController:
 UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarControllerDelegate {
 
-    var newsModel: [NewsModel] = []
-    var newsViewModel = NewsViewModel()
-
-    var items = 10
-    var categoryID = "topstories"
-
     @IBOutlet weak var newsTable: UITableView!
-    @IBOutlet weak var loadMoreButton: UIButton!
 
-    @IBAction func loadMore(_ sender: Any) {
-        items += 10
-        loadNews(items)
-    }
+    var newsViewModel: NewsViewModel!
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return newsModel.count
-    }
+    var isDataLoading = false
+    var newsModel: [NewsModel] = []
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //        swiftlint:disable force_cast
-        let cell: CustomCell = tableView.dequeueReusableCell(
-            withIdentifier: "newsList", for: indexPath
-            ) as! CustomCell
-        //         swiftlint:enable force_cast
-
-        let newsItem = newsModel[indexPath.row]
-        cell.newsTitle.text = newsItem.title
-        cell.newsAuthor.text = "By: \(newsItem.author)"
-        if let time = newsItem.since {
-            cell.newsTime.text = "\(time) Ago"
-        }
-        cell.newsScore.text = "\(newsItem.score) Points"
-        if let comments = newsItem.kids {
-            cell.newsComments.text = "\(comments.count) Comments"
-        }
-        return cell
-    }
-
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        let tabBarIndex = tabBarController.selectedIndex
-        switch tabBarIndex {
-        case 1:
-            categoryID = "newstories"
-        case 2:
-            categoryID = "beststories"
-        default:
-            categoryID = "topstories"
-        }
-    }
-
-    func loadNews(_ items: Int) {
-
-        loadMoreButton.setTitle("Loading...", for: .normal)
-        loadMoreButton.alpha = 0.3
-
-        newsViewModel.fetchModel(items, categoryID) { result in
+    func loadNews() {
+        isDataLoading = true
+        newsViewModel.fetchModel { result in
             switch result {
             case .failure(let err):
                 print("ViewController: \(err)")
             case .success(let newsModel):
                 self.newsModel = newsModel
+                self.isDataLoading = false
             }
             // Reloading UI on the main thread
             DispatchQueue.main.async {
-                self.loadMoreButton.setTitle("Load More", for: .normal)
-                self.loadMoreButton.alpha = 1
                 self.newsTable.reloadData()
             }
         }
@@ -85,11 +38,10 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.tabBarController?.delegate = self
         newsTable.dataSource = self
         newsTable.delegate = self
 
-        loadNews(items)
+        loadNews()
     }
 
     //  Implement onclick overview page
@@ -101,4 +53,53 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
     //    override func viewDidAppear(_ animated: Bool) {
     //
     //    }
+}
+
+// Table extension
+extension ViewController {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return newsModel.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        //        swiftlint:disable force_cast
+        let cell: CustomCell = tableView.dequeueReusableCell(
+            withIdentifier: "newsList", for: indexPath
+            ) as! CustomCell
+        //         swiftlint:enable force_cast
+
+        let newsItem = newsModel[indexPath.row]
+
+        cell.newsTitle.text = newsItem.title
+//        cell.newsAuthor.text = "By: \(newsItem.author)"
+        if let time = newsItem.since {
+            cell.newsTime.text = "\(time) Ago"
+        }
+        if let desc = newsItem.desc {
+            cell.newsDesc.text = desc
+        }
+//        cell.newsScore.text = "\(newsItem.score) Points"
+//        if let comments = newsItem.kids {
+//            cell.newsComments.text = "\(comments.count) Comments"
+//        }
+        return cell
+    }
+}
+
+// Scroll to the bottom to load more entries
+extension ViewController {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+        let height = scrollView.frame.size.height
+        let contentYoffset = scrollView.contentOffset.y
+        let distanceFromBottom = scrollView.contentSize.height - contentYoffset
+        if distanceFromBottom < height {
+            if !isDataLoading {
+                print("Load new data")
+                loadNews()
+            }
+        }
+    }
 }

@@ -12,10 +12,6 @@ import UIKit
 class CustomCell: UITableViewCell {
 
     @IBOutlet weak var newsTitle: UILabel!
-
-    @IBOutlet weak var newsAuthor: UILabel!
-    @IBOutlet weak var newsScore: UILabel!
-
-    @IBOutlet weak var newsComments: UILabel!
+    @IBOutlet weak var newsDesc: UILabel!
     @IBOutlet weak var newsTime: UILabel!
 }
