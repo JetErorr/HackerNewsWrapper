@@ -73,13 +73,10 @@ class NewsService {
                 do {
                     let news = try self.decoder.decode(NewsModel.self, from: data)
 
-                    // Formatting seconds into human readable time strings
-                    let since = Date().offsetFrom(date: Date(timeIntervalSince1970: news.time))
-
                     // Returning a new object with values from the fetch
                     completion(.success(
-                        NewsModel(news.title, news.desc ?? "", news.author, news.time,
-                                  news.score, news.kids ?? [], news.url ?? "", newsURLString, since))
+                        NewsModel(news.title, news.desc, news.author, news.time,
+                                  news.score, news.kids, news.url, newsURLString))
                     )
                 } catch {
                     print(newsURL)
@@ -89,25 +86,5 @@ class NewsService {
                 }
             }
         }.resume()
-    }
-}
-
-extension Date {
-
-    func offsetFrom(date: Date) -> String {
-
-        let dayHourMinuteSecond: Set<Calendar.Component> = [.day, .hour, .minute, .second]
-        let difference = NSCalendar.current.dateComponents(dayHourMinuteSecond, from: date, to: self)
-
-        let seconds = "\(difference.second ?? 0)s"
-        let minutes = "\(difference.minute ?? 0)m" + " " + seconds
-        let hours = "\(difference.hour ?? 0)h" + " " + minutes
-        let days = "\(difference.day ?? 0)d" + " " + hours
-
-        if let day = difference.day, day          > 0 { return days }
-        if let hour = difference.hour, hour       > 0 { return hours }
-        if let minute = difference.minute, minute > 0 { return minutes }
-        if let second = difference.second, second > 0 { return seconds }
-        return ""
     }
 }

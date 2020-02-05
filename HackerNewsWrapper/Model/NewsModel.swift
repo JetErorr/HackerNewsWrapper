@@ -9,7 +9,10 @@
 // Model for the MVVM pattern
 import Foundation
 
+let dateFormatter = DateFormatter()
+
 struct NewsModel: Codable {
+
     let title: String
     let desc: String?
     let author: String
@@ -18,7 +21,7 @@ struct NewsModel: Codable {
     let kids: [Int]?
     let url: String?
     var article: String? = String()
-    var since: String? = String()
+    var since: String = String()
 
     enum CodingKeys: String, CodingKey {
         case title
@@ -30,16 +33,34 @@ struct NewsModel: Codable {
         case url
     }
 
-    init(_ title: String, _ desc: String, _ author: String, _ time: Double,
-         _ score: Int, _ kids: [Int], _ url: String, _ article: String, _ since: String) {
+    init(_ title: String, _ desc: String?, _ author: String, _ time: Double,
+         _ score: Int, _ kids: [Int]?, _ url: String?, _ article: String) {
+
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
+
         self.title = title
-        self.desc = desc
+
+        if let desc = desc {
+            self.desc = desc
+        } else { self.desc = "" }
+
         self.author = author
+
         self.time = time
+
         self.score = score
-        self.kids = kids
-        self.url = url
+
+        if let kids = kids {
+            self.kids = kids
+        } else { self.kids = [] }
+
+        if let url = url {
+            self.url = url
+        } else { self.url = "" }
+
         self.article = article
-        self.since = since
+
+        self.since = dateFormatter.string(from: Date(timeIntervalSince1970: time))
     }
 }

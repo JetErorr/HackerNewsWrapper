@@ -22,13 +22,13 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var newsComments: UILabel!
 
     override func viewDidLoad() {
-        print("In here")
+
         newsTitle.text = newsModel.title
         newsDesc.text = newsModel.desc
         newsAuthor.setTitle(newsModel.author, for: .normal)
         newsArticle.setTitle(newsModel.article, for: .normal)
         newsURL.titleLabel?.text = newsModel.url
-        newsScore.text = "\(newsModel.score)"
-        newsComments.text = "\(newsModel.kids!.count)"
+        newsScore.text = "Points: \(newsModel.score)"
+        newsComments.text = "Comments: \(newsModel.kids!.count)"
     }
 }

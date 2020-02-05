@@ -36,6 +36,7 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
         }
     }
 
+    // ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -69,12 +70,10 @@ extension ViewController {
         let newsItem = newsModel[indexPath.row]
 
         cell.newsTitle.text = newsItem.title
-        if let time = newsItem.since {
-            cell.newsTime.text = "\(time) Ago"
-        }
-        if let desc = newsItem.desc {
-            cell.newsDesc.text = desc
-        }
+
+        cell.newsTime.text = String(newsItem.since)
+
+        cell.newsDesc.text = newsItem.desc
 
         return cell
     }
@@ -89,7 +88,7 @@ extension ViewController {
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset
         if distanceFromBottom < height {
             if !isDataLoading {
-                print("Load new data")
+                // Laoding new data
                 loadNews()
             }
         }
@@ -100,12 +99,12 @@ extension ViewController {
 extension ViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
-        // Edit item Function Block
         if segue.identifier == "detailSeg" {
             //swiftlint:disable force_cast
+            // Downcasting
             let controller = segue.destination as! DetailViewController
             if let indexPath = newsTable.indexPath(for: sender as! UITableViewCell) {
-                // Responding to the bringBack protocol with a value for itemToEdit
+                //swiftlint:enable force_cast
                 controller.newsModel = newsModel[indexPath.row]
             }
         }
