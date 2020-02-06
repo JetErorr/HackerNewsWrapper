@@ -10,6 +10,7 @@
 import Foundation
 
 let dateFormatter = DateFormatter()
+let saveService = SaveService()
 
 struct NewsModel: Codable {
 
@@ -20,6 +21,9 @@ struct NewsModel: Codable {
     let score: Int
     let kids: [Int]?
     let url: String?
+
+    var saved: String = String()
+    var newsID: Int = Int()
     var article: String? = String()
     var since: String = String()
 
@@ -33,8 +37,8 @@ struct NewsModel: Codable {
         case url
     }
 
-    init(_ title: String, _ desc: String?, _ author: String, _ time: Double,
-         _ score: Int, _ kids: [Int]?, _ url: String?, _ article: String) {
+    init(_ title: String, _ desc: String?, _ author: String, _ time: Double, _ score: Int,
+         _ kids: [Int]?, _ newsID: Int, _ url: String?, _ article: String) {
 
         dateFormatter.dateStyle = .short
         dateFormatter.timeStyle = .none
@@ -59,8 +63,18 @@ struct NewsModel: Codable {
             self.url = url
         } else { self.url = "" }
 
+        self.newsID = newsID
+
         self.article = article
 
         self.since = dateFormatter.string(from: Date(timeIntervalSince1970: time))
+
+        if saveService.checkSaved(newsID) {
+            self.saved = "Favourite ⭐️"
+        } else {
+            self.saved = ""
+        }
     }
+
+    // MARK: - Make new initializer to create model from 
 }

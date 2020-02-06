@@ -10,13 +10,12 @@ import UIKit
 
 class TabBarViewController: UITabBarController {
 
-    // Delegate : Create weak reference
-//    weak var tabDelegate: TabChecker?
-
     override func viewDidLoad() {
 
-        // Extension : tab changed delegate
-//        self.tabDelegate = newsViewModel
+//        for _ in 0...100 {
+//            saveService.removeFromSaved(893)
+//        }
+
         tabBarController?.selectedIndex = 0
 
         if let topStory = viewControllers?[0] as? ViewController {
@@ -28,6 +27,9 @@ class TabBarViewController: UITabBarController {
         if let bestStory = viewControllers?[2] as? ViewController {
             bestStory.newsViewModel = NewsViewModel(cat: "beststories")
         }
+        if let savedStory = viewControllers?[3] as? ViewController {
+            savedStory.newsViewModel = NewsViewModel(cat: "saved")
+        }
 
         let items = tabBar.items!
         items[0].title = "Top Stories"
@@ -36,5 +38,7 @@ class TabBarViewController: UITabBarController {
         items[1].image = UIImage(systemName: "pencil.circle.fill")
         items[2].title = "Best Stories"
         items[2].image = UIImage(systemName: "star.circle.fill")
+        items[3].title = "Saved Stories"
+        items[3].image = UIImage(systemName: "star.circle.fill")
     }
 }

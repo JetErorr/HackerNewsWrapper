@@ -14,6 +14,8 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
     @IBOutlet weak var newsTable: UITableView!
 
     var newsViewModel: NewsViewModel!
+    let saveService = SaveService()
+
 //    var detailViewController: DetailViewController!
 
     var isDataLoading = false
@@ -52,11 +54,23 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
     //    }
 }
 
-// Table extension
+// MARK: - Table extension
 extension ViewController {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return newsModel.count
+    }
+
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        var newsItem = newsModel[indexPath.row]
+
+//        print("Acc")
+        if saveService.checkSaved(newsItem.newsID) {
+            saveService.removeFromSaved(newsItem.newsID)
+            newsItem.saved = ""
+        } else {
+            saveService.addToSaved(newsItem.newsID)
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -79,7 +93,7 @@ extension ViewController {
     }
 }
 
-// Scroll to the bottom to load more entries
+// MARK: - Reload when scrolled to bottom
 extension ViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
@@ -95,7 +109,7 @@ extension ViewController {
     }
 }
 
-// Segue to DetailVC
+// MARK: - Segue to DetailVC
 extension ViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 

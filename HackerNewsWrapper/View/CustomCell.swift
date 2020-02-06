@@ -14,4 +14,5 @@ class CustomCell: UITableViewCell {
     @IBOutlet weak var newsTitle: UILabel!
     @IBOutlet weak var newsDesc: UILabel!
     @IBOutlet weak var newsTime: UILabel!
+    @IBOutlet weak var newsSaved: UILabel!
 }

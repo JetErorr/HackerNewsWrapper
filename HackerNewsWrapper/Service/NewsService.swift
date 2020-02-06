@@ -12,44 +12,53 @@ import Foundation
 class NewsService {
 
     let decoder = JSONDecoder()
+    let saveService = SaveService()
 
     // Get indices for new news items
     func refreshNewsList(_ category: String, completion: @escaping (Result<[Int], Error>) -> Void) {
         print(category)
 
-        // URL for getting top 500 news IDs
-        // Add Configurable code for things like New, Best, Job Stories, Ask, Show, etc and other things
-        let indexURLString = "https://hacker-news.firebaseio.com/v0/\(category).json"
-        guard let indexURL = URL(string: indexURLString) else {
-            print("ERROR: Invalid index URL")
-            return
-        }
-
-        URLSession.shared.dataTask(with: indexURL) { data, _, err in
-            if let err = err {
-
-                print("ERROR: Couldn't fetch index")
-                print("Service: \(err.localizedDescription)")
-
-                completion(.failure(err))
-
-            } else if let data = data {
-
-                do {
-                    let index = try self.decoder.decode([Int].self, from: data)
-                    completion(.success(index))
-//                    print(index) //debug
-
-                } catch {
-
-                    print("ERROR: Couldn't load news index")
-                    print(indexURLString)
-                    print("Service: \(error.localizedDescription)")
-
-                    completion(.failure(error))
-                }
+        if category == "saved" {
+            let localID = saveService.getSavedIDs()
+            if localID.count != 0 {
+                completion(.success(localID))
             }
-        }.resume()
+        } else {
+
+            // URL for getting top 500 news IDs
+            // Add Configurable code for things like New, Best, Job Stories, Ask, Show, etc and other things
+            let indexURLString = "https://hacker-news.firebaseio.com/v0/\(category).json"
+            guard let indexURL = URL(string: indexURLString) else {
+                print("ERROR: Invalid index URL")
+                return
+            }
+
+            URLSession.shared.dataTask(with: indexURL) { data, _, err in
+                if let err = err {
+
+                    print("ERROR: Couldn't fetch index")
+                    print("Service: \(err.localizedDescription)")
+
+                    completion(.failure(err))
+
+                } else if let data = data {
+
+                    do {
+                        let index = try self.decoder.decode([Int].self, from: data)
+                        completion(.success(index))
+                        //                    print(index) //debug
+
+                    } catch {
+
+                        print("ERROR: Couldn't load news index")
+                        print(indexURLString)
+                        print("Service: \(error.localizedDescription)")
+
+                        completion(.failure(error))
+                    }
+                }
+            }.resume()
+        }
     }
 
     // Refactoring names
@@ -57,7 +66,7 @@ class NewsService {
 
         // Insert newsID index in the newsURL
         let newsURLString = "https://hacker-news.firebaseio.com/v0/item/\(newsID).json"
-//        let newsURLString = "https://hacker-news.firebaseio.com/v0/item/22200229.json"
+        //        let newsURLString = "https://hacker-news.firebaseio.com/v0/item/22200229.json"
 
         guard let newsURL = URL(string: newsURLString) else {
             print("ERROR: Invalid news URL")
@@ -73,10 +82,15 @@ class NewsService {
                 do {
                     let news = try self.decoder.decode(NewsModel.self, from: data)
 
+                    //                    var saveState = false
+                    //                    if self.saveService.checkSaved(newsID) {
+                    //                        saveState = true
+                    //                    }
+
                     // Returning a new object with values from the fetch
                     completion(.success(
-                        NewsModel(news.title, news.desc, news.author, news.time,
-                                  news.score, news.kids, news.url, newsURLString))
+                        NewsModel(news.title, news.desc, news.author, news.time, news.score,
+                                  news.kids, newsID, news.url, newsURLString))
                     )
                 } catch {
                     print(newsURL)

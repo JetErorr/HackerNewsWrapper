@@ -11,7 +11,7 @@ import Foundation
 
 class NewsViewModel {
 
-    var items: Int = 0 // remove assignment
+    var items: Int = 0 // todo remove assignment
 
     // Local use
     let category: String
@@ -33,6 +33,8 @@ class NewsViewModel {
         // Create Model
         var newsIndices = [Int]()
         var newsModel: [NewsModel] = []
+
+//        if category == "saved"
 
         // Get indices for the news item
         newsService.refreshNewsList(category) { result in
