@@ -14,9 +14,9 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
     @IBOutlet weak var newsTable: UITableView!
 
     var newsViewModel: NewsViewModel!
-    let saveService = SaveService()
+//    let saveService = SaveService()
 
-//    var detailViewController: DetailViewController!
+    //    var detailViewController: DetailViewController!
 
     var isDataLoading = false
     var newsModel: [NewsModel] = []
@@ -61,16 +61,43 @@ extension ViewController {
         return newsModel.count
     }
 
-    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        var newsItem = newsModel[indexPath.row]
+//    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+//        var newsItem = self.newsModel[indexPath.row]
+//
+//        if saveService.checkSaved(newsItem.newsID) {
+//            saveService.removeFromSaved(newsItem.newsID)
+//            newsItem.saved = false
+//
+//        } else {
+//            saveService.addToSaved(newsItem.newsID)
+//            newsItem.saved = true
+//        }
+//        tableView.reloadData()
+//        tableView.reloadRows(at: [indexPath], with: .none)
+//    }
 
-//        print("Acc")
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //swiftlint:disable force_cast
+        let cell: CustomCell = tableView.dequeueReusableCell(
+            withIdentifier: "newsList", for: indexPath
+            ) as! CustomCell
+
+        var newsItem = self.newsModel[indexPath.row]
+
         if saveService.checkSaved(newsItem.newsID) {
             saveService.removeFromSaved(newsItem.newsID)
-            newsItem.saved = ""
+            newsItem.saved = false
+            cell.newsSaved.alpha = 0
+
         } else {
             saveService.addToSaved(newsItem.newsID)
+            newsItem.saved = true
+            cell.newsSaved.alpha = 1
         }
+
+        tableView.reloadRows(at: [indexPath], with: .none)
+
+        tableView.reloadData()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -81,7 +108,7 @@ extension ViewController {
             ) as! CustomCell
         //         swiftlint:enable force_cast
 
-        let newsItem = newsModel[indexPath.row]
+        let newsItem = self.newsModel[indexPath.row]
 
         cell.newsTitle.text = newsItem.title
 
@@ -89,6 +116,11 @@ extension ViewController {
 
         cell.newsDesc.text = newsItem.desc
 
+        if newsItem.saved {
+            cell.newsSaved.alpha = 1
+        } else {
+            cell.newsSaved.alpha = 0
+        }
         return cell
     }
 }
@@ -102,7 +134,7 @@ extension ViewController {
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset
         if distanceFromBottom < height {
             if !isDataLoading {
-                // Laoding new data
+                // Loading new data
                 loadNews()
             }
         }

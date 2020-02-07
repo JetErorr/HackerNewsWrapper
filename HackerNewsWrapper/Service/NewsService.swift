@@ -8,6 +8,7 @@
 
 // Service for fetching and parsing JSON data
 import Foundation
+import UIKit
 
 class NewsService {
 
@@ -20,6 +21,7 @@ class NewsService {
 
         if category == "saved" {
             let localID = saveService.getSavedIDs()
+            print(localID)
             if localID.count != 0 {
                 completion(.success(localID))
             }

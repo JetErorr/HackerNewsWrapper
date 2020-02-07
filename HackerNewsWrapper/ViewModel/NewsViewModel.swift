@@ -43,10 +43,13 @@ class NewsViewModel {
                 print("ViewModel: \(err)")
                 completion(.failure(err))
             case .success(let indexArray):
-
+                print(indexArray)
                 // Set fetched index as local one
                 newsIndices = indexArray
             }
+
+            if self.category == "saved" { self.items = newsIndices.count }
+            // todo: remove jugad
 
             for newsID in 0..<self.items {
                 myGroup.enter()

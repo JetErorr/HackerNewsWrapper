@@ -11,6 +11,10 @@ import CoreData
 import UIKit
 
 class SaveService {
+//swiftlint:disable force_cast
+//    DispatchQueue.main.async {
+    let context = ((UIApplication.shared.delegate) as! AppDelegate).persistentContainer.viewContext
+//    }
 
     func checkSaved(_ itemID: Int) -> Bool {
 
@@ -24,10 +28,6 @@ class SaveService {
     func addToSaved(_ itemID: Int) {
         print("Adding")
         // Add itemID to the db
-        //swiftlint:disable force_cast
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-
-        let context = appDelegate.persistentContainer.viewContext
 
         let newEntry = NSEntityDescription.insertNewObject(forEntityName: "NewsID", into: context)
 
@@ -42,11 +42,7 @@ class SaveService {
 
     func removeFromSaved(_ itemID: Int) {
         print("Removing")
-        // Add itemID to the db
-        //swiftlint:disable force_cast
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-
-        let context = appDelegate.persistentContainer.viewContext
+        // Remove itemID from db
 
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsID")
         fetchRequest.predicate = NSPredicate(format: "savedID == %d", itemID)
@@ -70,18 +66,12 @@ class SaveService {
     }
 
     func getSavedIDs() -> [Int] {
-
-        //swiftlint:disable force_cast
+        // loop through all savedIDs
 //        DispatchQueue.main.async {
             var ret: [Int] = []
 
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsID")
 
-            let context = appDelegate.persistentContainer.viewContext
-
-            // loop through all savedIDs
             do {
                 let result = try context.fetch(fetchRequest)
                 var IDs = 0
@@ -91,7 +81,6 @@ class SaveService {
                     IDs = res.value(forKey: "savedID") as! Int
 
                     ret.append(IDs)
-
                 }
             } catch {
                 print("Couldn't fetch saved indices")

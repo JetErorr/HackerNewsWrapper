@@ -22,7 +22,7 @@ struct NewsModel: Codable {
     let kids: [Int]?
     let url: String?
 
-    var saved: String = String()
+    var saved: Bool = Bool()
     var newsID: Int = Int()
     var article: String? = String()
     var since: String = String()
@@ -70,9 +70,9 @@ struct NewsModel: Codable {
         self.since = dateFormatter.string(from: Date(timeIntervalSince1970: time))
 
         if saveService.checkSaved(newsID) {
-            self.saved = "Favourite ⭐️"
+            self.saved = true
         } else {
-            self.saved = ""
+            self.saved = false
         }
     }
 
