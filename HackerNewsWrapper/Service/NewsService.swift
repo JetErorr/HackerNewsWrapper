@@ -21,7 +21,7 @@ class NewsService {
 
         if category == "saved" {
             let localID = saveService.getSavedIDs()
-            print(localID)
+            print(localID.count, "Favourites")
             if localID.count != 0 {
                 completion(.success(localID))
             }
@@ -84,15 +84,17 @@ class NewsService {
                 do {
                     let news = try self.decoder.decode(NewsModel.self, from: data)
 
-                    //                    var saveState = false
-                    //                    if self.saveService.checkSaved(newsID) {
-                    //                        saveState = true
-                    //                    }
+                    let saveState: Bool
+                    if self.saveService.checkSaved(newsID) {
+                        saveState = true
+                    } else {
+                        saveState = false
+                    }
 
                     // Returning a new object with values from the fetch
                     completion(.success(
                         NewsModel(news.title, news.desc, news.author, news.time, news.score,
-                                  news.kids, newsID, news.url, newsURLString))
+                                  news.kids, newsID, news.url, newsURLString, saveState))
                     )
                 } catch {
                     print(newsURL)

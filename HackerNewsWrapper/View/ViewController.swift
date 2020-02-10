@@ -14,90 +14,29 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
     @IBOutlet weak var newsTable: UITableView!
 
     var newsViewModel: NewsViewModel!
-//    let saveService = SaveService()
 
-    //    var detailViewController: DetailViewController!
-
-    var isDataLoading = false
     var newsModel: [NewsModel] = []
 
-    func loadNews() {
-        isDataLoading = true
-        newsViewModel.fetchModel { result in
-            switch result {
-            case .failure(let err):
-                print("ViewController: \(err)")
-            case .success(let newsModel):
-                self.newsModel = newsModel
-                self.isDataLoading = false
-            }
-            // Reloading UI on the main thread
-            DispatchQueue.main.async {
-                self.newsTable.reloadData()
-            }
-        }
-    }
+    var isDataLoading = false
 
-    // ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
 
         newsTable.dataSource = self
         newsTable.delegate = self
-
-        loadNews()
+        newsViewModel.reporterDelegate = self
     }
-
-    //  Implement refresh function
-    //    override func viewDidAppear(_ animated: Bool) {
-    //
-    //    }
 }
 
 // MARK: - Table extension
 extension ViewController {
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return newsModel.count
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        newsViewModel.favouriteToggled(indexPath.row)
     }
 
-//    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-//        var newsItem = self.newsModel[indexPath.row]
-//
-//        if saveService.checkSaved(newsItem.newsID) {
-//            saveService.removeFromSaved(newsItem.newsID)
-//            newsItem.saved = false
-//
-//        } else {
-//            saveService.addToSaved(newsItem.newsID)
-//            newsItem.saved = true
-//        }
-//        tableView.reloadData()
-//        tableView.reloadRows(at: [indexPath], with: .none)
-//    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //swiftlint:disable force_cast
-        let cell: CustomCell = tableView.dequeueReusableCell(
-            withIdentifier: "newsList", for: indexPath
-            ) as! CustomCell
-
-        var newsItem = self.newsModel[indexPath.row]
-
-        if saveService.checkSaved(newsItem.newsID) {
-            saveService.removeFromSaved(newsItem.newsID)
-            newsItem.saved = false
-            cell.newsSaved.alpha = 0
-
-        } else {
-            saveService.addToSaved(newsItem.newsID)
-            newsItem.saved = true
-            cell.newsSaved.alpha = 1
-        }
-
-        tableView.reloadRows(at: [indexPath], with: .none)
-
-        tableView.reloadData()
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return newsModel.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -116,11 +55,10 @@ extension ViewController {
 
         cell.newsDesc.text = newsItem.desc
 
-        if newsItem.saved {
-            cell.newsSaved.alpha = 1
-        } else {
-            cell.newsSaved.alpha = 0
-        }
+        cell.newsSaved.text = newsItem.saved
+
+        cell.layoutIfNeeded()
+
         return cell
     }
 }
@@ -135,13 +73,14 @@ extension ViewController {
         if distanceFromBottom < height {
             if !isDataLoading {
                 // Loading new data
-                loadNews()
+                isDataLoading = true
+                newsViewModel.fetchModel()
             }
         }
     }
 }
 
-// MARK: - Segue to DetailVC
+// MARK: - Segue to DetailVC // fixme
 extension ViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
@@ -151,8 +90,22 @@ extension ViewController {
             let controller = segue.destination as! DetailViewController
             if let indexPath = newsTable.indexPath(for: sender as! UITableViewCell) {
                 //swiftlint:enable force_cast
+                print(newsModel[indexPath.row])
                 controller.newsModel = newsModel[indexPath.row]
             }
         }
     }
 }
+
+extension ViewController: NewsReporter {
+    func getNews(_ newsModel: [NewsModel]) {
+        self.newsModel = newsModel
+        newsTable.reloadData()
+        isDataLoading = false
+    }
+}
+
+//  Implement refresh function
+//    override func viewDidAppear(_ animated: Bool) {
+//
+//    }

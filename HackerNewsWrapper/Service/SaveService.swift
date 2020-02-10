@@ -12,9 +12,7 @@ import UIKit
 
 class SaveService {
 //swiftlint:disable force_cast
-//    DispatchQueue.main.async {
     let context = ((UIApplication.shared.delegate) as! AppDelegate).persistentContainer.viewContext
-//    }
 
     func checkSaved(_ itemID: Int) -> Bool {
 
@@ -67,7 +65,7 @@ class SaveService {
 
     func getSavedIDs() -> [Int] {
         // loop through all savedIDs
-//        DispatchQueue.main.async {
+
             var ret: [Int] = []
 
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsID")
@@ -75,7 +73,6 @@ class SaveService {
             do {
                 let result = try context.fetch(fetchRequest)
                 var IDs = 0
-                print("Local Story Count: ", result.count)
                 for res in result as! [NSManagedObject] {
 
                     IDs = res.value(forKey: "savedID") as! Int
@@ -86,6 +83,5 @@ class SaveService {
                 print("Couldn't fetch saved indices")
             }
             return ret
-//        }
     }
 }
