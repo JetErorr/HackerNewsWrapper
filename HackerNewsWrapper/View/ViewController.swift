@@ -25,6 +25,7 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
         newsTable.dataSource = self
         newsTable.delegate = self
         newsViewModel.reporterDelegate = self
+        newsViewModel.fetchModel(0)
     }
 }
 
@@ -37,6 +38,10 @@ extension ViewController {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return newsModel.count
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

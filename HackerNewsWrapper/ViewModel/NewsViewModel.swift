@@ -15,53 +15,66 @@ protocol NewsReporter: class {
 
 class NewsViewModel {
 
+    let newsService = NewsService()
     let saveService = SaveService()
+    var newsIndices = [Int]()
 
-    var items: Int = 0 // todo remove assignment
+    var await = true
+
+    var startIdx = 0
+    var endIdx = 10
 
     weak var reporterDelegate: NewsReporter?
+
     // Local use
     let category: String
 
     // Prop Inject
     init(cat: String) {
+        let myGroup = DispatchGroup()
         category = cat
+        newsService.refreshNewsList(category) { result in
+
+            myGroup.enter()
+            self.await = true
+
+            switch result {
+
+            case .failure(let err):
+                print("ViewModel: \(err)")
+                myGroup.leave()
+            case .success(let indexArray):
+                self.newsIndices = indexArray
+                myGroup.leave()
+            }
+
+            myGroup.notify(queue: .main) {
+                print(self.category, "fetch Complete")
+                self.await = false
+                self.fetchModel()
+            }
+        }
     }
-    // Prop Inject
 
     var newsModel: [NewsModel] = []
 
+    func fetchModel(_ startFrom: Int = 0) {
+        startIdx = startFrom
+        self.fetchModel()
+    }
+
     func fetchModel() {
+        if !await && startIdx < newsIndices.count {
 
-        if items < 499 {
-            items += 10
-        }
-        // todo remove values, replace with limits
+            let myGroup = DispatchGroup()
 
-        let myGroup = DispatchGroup()
-        let newsService = NewsService()
-
-        // Create Model
-        var newsIndices = [Int]()
-
-        // Get indices for the news item
-        newsService.refreshNewsList(category) { result in
-            switch result {
-            case .failure(let err):
-                print("ViewModel: \(err)")
-            case .success(let indexArray):
-                // Set fetched index as local one
-                newsIndices = indexArray
-            }
-
-            if self.category == "saved" { self.items = newsIndices.count }
-            // todo: remove jugad
-
-            for newsID in 0..<self.items {
+            print(startIdx, "->", endIdx-1)
+            for newsID in startIdx..<endIdx {
                 myGroup.enter()
 
                 //Get Data from NewsService
-                newsService.fetchNews(newsID: newsIndices[newsID] ) { result in
+                newsService.fetchNews(newsID: newsIndices[newsID]) { result in
+
                     switch result {
                     case .failure(let err):
                         print("ViewModel: \(err)")
@@ -74,7 +87,16 @@ class NewsViewModel {
                 }
             }
             myGroup.notify(queue: .main) {
+
                 // Return Model
+                if self.endIdx+10 < self.newsIndices.count {
+                    self.startIdx += 10
+                    self.endIdx += 10
+//                    self.reporterDelegate?.getNews(self.newsModel)
+                } else {
+                    self.startIdx += 10
+                    self.endIdx = self.newsIndices.count
+                }
                 self.reporterDelegate?.getNews(self.newsModel)
             }
         }
@@ -86,6 +108,7 @@ class NewsViewModel {
         if saveService.checkSaved(newsID) {
             saveService.removeFromSaved(newsID)
             self.newsModel[index].saved = ""
+            self.
         } else {
             saveService.addToSaved(newsID)
             self.newsModel[index].saved = "Favourite ⭐️"
