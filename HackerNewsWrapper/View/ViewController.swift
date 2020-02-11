@@ -15,6 +15,8 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
 
     var newsViewModel: NewsViewModel!
 
+    var refreshControl = UIRefreshControl()
+
     var newsModel: [NewsModel] = []
 
     var isDataLoading = false
@@ -26,6 +28,51 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
         newsTable.delegate = self
         newsViewModel.reporterDelegate = self
         newsViewModel.fetchModel()
+
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
+        newsTable.addSubview(refreshControl) // not required when using UITableViewController
+
+        let name = NSNotification.Name.init("favToggle")
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadRows), name: name, object: nil)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        print("Appear")
+        newsViewModel.updateIndex()
+    }
+}
+
+extension ViewController {
+
+    @objc func refresh() {
+        print("Pulled to refresh")
+        newsModel.removeAll()
+        newsTable.reloadData()
+        newsViewModel.updateIndex()
+    }
+
+    @objc func reloadRows(notification: Notification) {
+        print("notified")
+
+//        newsViewModel.favouriteToggled(notif.userInfo.indexPath)
+
+        guard let userInfo = notification.userInfo,
+            let newsID = userInfo["newsID"] as? Int,
+            let item = userInfo["newsItem"] as? NewsModel
+        else {
+                print("No userInfo found in notification")
+                return
+        }
+
+        for indices in self.newsModel.indices {
+            if self.newsModel[indices].newsID == newsID {
+                print("Replacing")
+                self.newsModel[indices] = item
+            }
+        }
+        newsTable.reloadData()
     }
 }
 
@@ -33,7 +80,9 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
 extension ViewController {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        newsViewModel.favouriteToggled(indexPath.row)
+        newsTable.reloadData()
+        newsViewModel.favouriteToggled(indexPath)
+//        newsTable.reloadRows(at: [indexPath], with: .fade)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -106,6 +155,7 @@ extension ViewController: NewsReporter {
     func getNews(_ newsModel: [NewsModel]) {
         self.newsModel = newsModel
         newsTable.reloadData()
+        refreshControl.endRefreshing()
         isDataLoading = false
     }
 }

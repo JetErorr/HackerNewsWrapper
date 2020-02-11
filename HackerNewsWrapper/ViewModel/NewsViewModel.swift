@@ -31,8 +31,13 @@ class NewsViewModel {
 
     // Prop Inject
     init(cat: String) {
-        let myGroup = DispatchGroup()
         category = cat
+        updateIndex()
+    }
+
+    func updateIndex() {
+        let myGroup = DispatchGroup()
+
         newsService.refreshNewsList(category) { result in
 
             myGroup.enter()
@@ -61,16 +66,11 @@ class NewsViewModel {
     func fetchModel() {
 
         if !await {
-//            && startIdx < newsIndices.count {
 
             if newsIndices.count < 10 {
                 startIdx = 0
                 endIdx = newsIndices.count
             }
-
-//            if endIdx < newsModel.count {
-//                return
-//            }
 
             let myGroup = DispatchGroup()
 
@@ -87,8 +87,9 @@ class NewsViewModel {
                         myGroup.leave()
                     case .success(let newsItem):
                         // Set data into Model
-                        if self.newsModel.count == self.newsIndices.count { break }
-                        self.newsModel.append(newsItem)
+                        if self.newsModel.count < self.newsIndices.count {
+                            self.newsModel.append(newsItem)
+                        }
                         myGroup.leave()
                     }
                 }
@@ -99,7 +100,6 @@ class NewsViewModel {
                 if self.endIdx+10 < self.newsIndices.count {
                     self.startIdx += 10
                     self.endIdx += 10
-                    //                    self.reporterDelegate?.getNews(self.newsModel)
                 } else {
                     self.startIdx += 10
                     self.endIdx = self.newsIndices.count
@@ -109,16 +109,17 @@ class NewsViewModel {
         }
     }
 
-    func favouriteToggled(_ index: Int) {
-        let newsID = self.newsModel[index].newsID
+    func favouriteToggled(_ index: IndexPath) {
+        let newsID = self.newsModel[index.row].newsID
 
         if saveService.checkSaved(newsID) {
             saveService.removeFromSaved(newsID)
-            self.newsModel[index].saved = ""
+            self.newsModel[index.row].saved = ""
         } else {
             saveService.addToSaved(newsID)
-            self.newsModel[index].saved = "Favourite ⭐️"
+            self.newsModel[index.row].saved = "Favourite ⭐️"
         }
+        NotificationCenter.default.post(name: NSNotification.Name.init("favToggle"), object: nil, userInfo: ["newsID": newsID, "newsItem": newsModel[index.row]])
         self.reporterDelegate?.getNews(self.newsModel)
     }
 }

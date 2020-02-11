@@ -12,10 +12,6 @@ class TabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
 
-//        for _ in 0...100 {
-//            saveService.removeFromSaved(893)
-//        }
-
         tabBarController?.selectedIndex = 0
 
         if let topStory = viewControllers?[0] as? ViewController {
@@ -41,4 +37,8 @@ class TabBarViewController: UITabBarController {
         items[3].title = "Saved Stories"
         items[3].image = UIImage(systemName: "star.circle.fill")
     }
+//
+//    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+//        print("Selected view controller")
+//    }
 }
