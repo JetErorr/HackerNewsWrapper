@@ -58,13 +58,19 @@ class NewsViewModel {
 
     var newsModel: [NewsModel] = []
 
-    func fetchModel(_ startFrom: Int = 0) {
-        startIdx = startFrom
-        self.fetchModel()
-    }
-
     func fetchModel() {
-        if !await && startIdx < newsIndices.count {
+
+        if !await {
+//            && startIdx < newsIndices.count {
+
+            if newsIndices.count < 10 {
+                startIdx = 0
+                endIdx = newsIndices.count
+            }
+
+//            if endIdx < newsModel.count {
+//                return
+//            }
 
             let myGroup = DispatchGroup()
 
@@ -81,6 +87,7 @@ class NewsViewModel {
                         myGroup.leave()
                     case .success(let newsItem):
                         // Set data into Model
+                        if self.newsModel.count == self.newsIndices.count { break }
                         self.newsModel.append(newsItem)
                         myGroup.leave()
                     }
@@ -92,7 +99,7 @@ class NewsViewModel {
                 if self.endIdx+10 < self.newsIndices.count {
                     self.startIdx += 10
                     self.endIdx += 10
-//                    self.reporterDelegate?.getNews(self.newsModel)
+                    //                    self.reporterDelegate?.getNews(self.newsModel)
                 } else {
                     self.startIdx += 10
                     self.endIdx = self.newsIndices.count
@@ -108,7 +115,6 @@ class NewsViewModel {
         if saveService.checkSaved(newsID) {
             saveService.removeFromSaved(newsID)
             self.newsModel[index].saved = ""
-            self.
         } else {
             saveService.addToSaved(newsID)
             self.newsModel[index].saved = "Favourite ⭐️"

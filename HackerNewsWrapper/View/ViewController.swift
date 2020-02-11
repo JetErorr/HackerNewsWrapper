@@ -25,7 +25,7 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
         newsTable.dataSource = self
         newsTable.delegate = self
         newsViewModel.reporterDelegate = self
-        newsViewModel.fetchModel(0)
+        newsViewModel.fetchModel()
     }
 }
 
