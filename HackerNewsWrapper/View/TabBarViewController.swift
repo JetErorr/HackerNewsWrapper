@@ -11,34 +11,32 @@ import UIKit
 class TabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
+        super.viewDidLoad()
+
+        //swiftlint:disable force_cast
+        let topNewsVC = self.storyboard?.instantiateViewController(withIdentifier: "NewsList") as! ViewController
+        topNewsVC.newsViewModel = NewsViewModel(cat: "topstories")
+        topNewsVC.tabBarItem.title = "Top Stories"
+        topNewsVC.tabBarItem.image = UIImage(systemName: "arrow.up.circle.fill")
+
+        let newNewsVC = self.storyboard?.instantiateViewController(withIdentifier: "NewsList") as! ViewController
+        newNewsVC.newsViewModel = NewsViewModel(cat: "newstories")
+        newNewsVC.tabBarItem.title = "New Stories"
+        newNewsVC.tabBarItem.image = UIImage(systemName: "pencil.circle.fill")
+
+        let bestNewsVC = self.storyboard?.instantiateViewController(withIdentifier: "NewsList") as! ViewController
+        bestNewsVC.newsViewModel = NewsViewModel(cat: "beststories")
+        bestNewsVC.tabBarItem.title = "Best Stories"
+        bestNewsVC.tabBarItem.image = UIImage(systemName: "star.circle.fill")
+
+        let savedNewsVC = self.storyboard?.instantiateViewController(withIdentifier: "NewsList") as! ViewController
+        savedNewsVC.newsViewModel = NewsViewModel(cat: "saved")
+        savedNewsVC.tabBarItem.title = "Saved Stories"
+        savedNewsVC.tabBarItem.image = UIImage(systemName: "star.circle.fill")
+        //swiftlint:enable force_cast
+
+        viewControllers = [topNewsVC, newNewsVC, bestNewsVC, savedNewsVC]
 
         tabBarController?.selectedIndex = 0
-
-        if let topStory = viewControllers?[0] as? ViewController {
-            topStory.newsViewModel = NewsViewModel(cat: "topstories")
-        }
-        if let newStory = viewControllers?[1] as? ViewController {
-            newStory.newsViewModel = NewsViewModel(cat: "newstories")
-        }
-        if let bestStory = viewControllers?[2] as? ViewController {
-            bestStory.newsViewModel = NewsViewModel(cat: "beststories")
-        }
-        if let savedStory = viewControllers?[3] as? ViewController {
-            savedStory.newsViewModel = NewsViewModel(cat: "saved")
-        }
-
-        let items = tabBar.items!
-        items[0].title = "Top Stories"
-        items[0].image = UIImage(systemName: "arrow.up.circle.fill")
-        items[1].title = "New Stories"
-        items[1].image = UIImage(systemName: "pencil.circle.fill")
-        items[2].title = "Best Stories"
-        items[2].image = UIImage(systemName: "star.circle.fill")
-        items[3].title = "Saved Stories"
-        items[3].image = UIImage(systemName: "star.circle.fill")
     }
-//
-//    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-//        print("Selected view controller")
-//    }
 }

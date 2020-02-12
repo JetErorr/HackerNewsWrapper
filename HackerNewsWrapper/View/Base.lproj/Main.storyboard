@@ -10,7 +10,7 @@
         <!--NewsView-->
         <scene sceneID="ofU-6v-YTx">
             <objects>
-                <viewController id="KmZ-1j-lwr" userLabel="NewsView" customClass="ViewController" customModule="HackerNewsWrapper" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NewsList" id="KmZ-1j-lwr" userLabel="NewsView" customClass="ViewController" customModule="HackerNewsWrapper" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JBs-8s-pr8">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -51,7 +51,7 @@
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favourite ⭐️" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dBm-zi-VNZ">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favourite ⭐️" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dBm-zi-VNZ">
                                                                     <rect key="frame" x="177" y="0.0" width="177" height="23.666666666666668"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
@@ -85,7 +85,7 @@
                                             <outlet property="newsSaved" destination="dBm-zi-VNZ" id="fwv-Mv-CW3"/>
                                             <outlet property="newsTime" destination="iAE-aM-btf" id="tnH-jA-dpM"/>
                                             <outlet property="newsTitle" destination="Q9F-7z-Wnq" id="gzO-Js-Cgm"/>
-                                            <segue destination="tWi-5U-vAT" kind="show" trigger="accessoryAction" id="Nye-hq-wpD"/>
+                                            <segue destination="tWi-5U-vAT" kind="show" identifier="detailSeg" trigger="accessoryAction" id="Nye-hq-wpD"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -112,12 +112,6 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
-                    <connections>
-                        <segue destination="KmZ-1j-lwr" kind="relationship" relationship="viewControllers" id="EU9-NA-KRf"/>
-                        <segue destination="KmZ-1j-lwr" kind="relationship" relationship="viewControllers" id="lnr-IF-M0v"/>
-                        <segue destination="KmZ-1j-lwr" kind="relationship" relationship="viewControllers" id="hDF-b9-xFc"/>
-                        <segue destination="KmZ-1j-lwr" kind="relationship" relationship="viewControllers" id="zpu-IW-0Xr"/>
-                    </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mp6-jL-YjR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -214,7 +208,4 @@
             <point key="canvasLocation" x="3576.811594202899" y="-921.42857142857133"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="hDF-b9-xFc"/>
-    </inferredMetricsTieBreakers>
 </document>

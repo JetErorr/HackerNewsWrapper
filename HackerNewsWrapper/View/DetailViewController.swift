@@ -22,6 +22,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var newsComments: UILabel!
 
     override func viewDidLoad() {
+        super.viewDidLoad()
 
         newsTitle.text = newsModel.title
         newsDesc.text = newsModel.desc

@@ -32,10 +32,15 @@ class NewsViewModel {
     // Prop Inject
     init(cat: String) {
         category = cat
-        updateIndex()
+//        updateIndex()
     }
 
     func updateIndex() {
+
+        startIdx = 0
+        endIdx = 10
+        newsModel.removeAll()
+
         let myGroup = DispatchGroup()
 
         newsService.refreshNewsList(category) { result in
@@ -54,7 +59,6 @@ class NewsViewModel {
             }
 
             myGroup.notify(queue: .main) {
-                print(self.category, "fetch Complete")
                 self.await = false
                 self.fetchModel()
             }
@@ -96,14 +100,15 @@ class NewsViewModel {
             }
             myGroup.notify(queue: .main) {
 
-                // Return Model
-                if self.endIdx+10 < self.newsIndices.count {
+                // Handle if the next iteration returns an indexOutOfBounds
+                if self.endIdx + 10 < self.newsIndices.count {
                     self.startIdx += 10
                     self.endIdx += 10
                 } else {
-                    self.startIdx += 10
+//                    self.startIdx += 10
                     self.endIdx = self.newsIndices.count
                 }
+
                 self.reporterDelegate?.getNews(self.newsModel)
             }
         }
@@ -119,7 +124,22 @@ class NewsViewModel {
             saveService.addToSaved(newsID)
             self.newsModel[index.row].saved = "Favourite ⭐️"
         }
-        NotificationCenter.default.post(name: NSNotification.Name.init("favToggle"), object: nil, userInfo: ["newsID": newsID, "newsItem": newsModel[index.row]])
+
+        let fav = NSNotification.Name.init("favToggle")
+        NotificationCenter.default.post(
+            name: fav,
+            object: nil,
+            userInfo: ["newsID": newsID, "newsItem": newsModel[index.row]]
+        )
+
         self.reporterDelegate?.getNews(self.newsModel)
+    }
+
+    func checkFavourite(_ itemID: Int) -> String {
+        if saveService.checkSaved(itemID) {
+            return "Favourite"
+        } else {
+            return "Nope"
+        }
     }
 }

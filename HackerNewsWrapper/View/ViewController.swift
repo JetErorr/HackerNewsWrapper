@@ -11,18 +11,21 @@ import UIKit
 class ViewController:
 UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarControllerDelegate {
 
-    @IBOutlet weak var newsTable: UITableView!
+    @IBOutlet weak var newsTable: UITableView! // view item
 
-    var newsViewModel: NewsViewModel!
+    var newsViewModel: NewsViewModel! // data item
 
-    var refreshControl = UIRefreshControl()
+    var refreshControl = UIRefreshControl() // view logic item
 
-    var newsModel: [NewsModel] = []
+    var newsModel: [NewsModel] = [] // data item
 
-    var isDataLoading = false
+    var isDataLoading = false // view logic item
+
+    var firstLoad = false // view logic item
 
     override func viewDidLoad() {
         super.viewDidLoad()
+//        print("Load")
 
         newsTable.dataSource = self
         newsTable.delegate = self
@@ -31,7 +34,7 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
 
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
-        newsTable.addSubview(refreshControl) // not required when using UITableViewController
+        newsTable.addSubview(refreshControl)
 
         let name = NSNotification.Name.init("favToggle")
         NotificationCenter.default.addObserver(self, selector: #selector(reloadRows), name: name, object: nil)
@@ -39,24 +42,24 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        print("Appear")
-        newsViewModel.updateIndex()
+        if !firstLoad {
+            newsViewModel.updateIndex()
+            firstLoad = true
+        }
     }
 }
 
 extension ViewController {
 
     @objc func refresh() {
-        print("Pulled to refresh")
+        isDataLoading = true
         newsModel.removeAll()
         newsTable.reloadData()
         newsViewModel.updateIndex()
     }
 
     @objc func reloadRows(notification: Notification) {
-        print("notified")
-
-//        newsViewModel.favouriteToggled(notif.userInfo.indexPath)
+//        print("notified")
 
         guard let userInfo = notification.userInfo,
             let newsID = userInfo["newsID"] as? Int,
@@ -66,12 +69,10 @@ extension ViewController {
                 return
         }
 
-        for indices in self.newsModel.indices {
-            if self.newsModel[indices].newsID == newsID {
-                print("Replacing")
-                self.newsModel[indices] = item
-            }
+        for indices in self.newsModel.indices where self.newsModel[indices].newsID == newsID {
+            self.newsModel[indices] = item
         }
+
         newsTable.reloadData()
     }
 }
@@ -80,9 +81,7 @@ extension ViewController {
 extension ViewController {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        newsTable.reloadData()
         newsViewModel.favouriteToggled(indexPath)
-//        newsTable.reloadRows(at: [indexPath], with: .fade)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -101,7 +100,7 @@ extension ViewController {
             ) as! CustomCell
         //         swiftlint:enable force_cast
 
-        let newsItem = self.newsModel[indexPath.row]
+        let newsItem = newsModel[indexPath.row]
 
         cell.newsTitle.text = newsItem.title
 
@@ -124,12 +123,9 @@ extension ViewController {
         let height = scrollView.frame.size.height
         let contentYoffset = scrollView.contentOffset.y
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset
-        if distanceFromBottom < height {
-            if !isDataLoading {
-                // Loading new data
-                isDataLoading = true
-                newsViewModel.fetchModel()
-            }
+        if distanceFromBottom + 150 < height && !isDataLoading {
+            isDataLoading = true
+            newsViewModel.fetchModel()
         }
     }
 }
@@ -144,7 +140,6 @@ extension ViewController {
             let controller = segue.destination as! DetailViewController
             if let indexPath = newsTable.indexPath(for: sender as! UITableViewCell) {
                 //swiftlint:enable force_cast
-                print(newsModel[indexPath.row])
                 controller.newsModel = newsModel[indexPath.row]
             }
         }
@@ -159,8 +154,3 @@ extension ViewController: NewsReporter {
         isDataLoading = false
     }
 }
-
-//  Implement refresh function
-//    override func viewDidAppear(_ animated: Bool) {
-//
-//    }
