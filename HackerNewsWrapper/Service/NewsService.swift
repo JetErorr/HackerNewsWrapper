@@ -22,9 +22,9 @@ class NewsService {
         if category == "saved" {
             let localID = saveService.getSavedIDs()
             print(localID.count, "Favourites")
-            if localID.count != 0 {
+//            if localID.count != 0 {
                 completion(.success(localID))
-            }
+//            }
         } else {
 
             // URL for getting top 500 news IDs

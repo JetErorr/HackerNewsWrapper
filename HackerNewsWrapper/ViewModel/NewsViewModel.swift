@@ -134,12 +134,4 @@ class NewsViewModel {
 
         self.reporterDelegate?.getNews(self.newsModel)
     }
-
-    func checkFavourite(_ itemID: Int) -> String {
-        if saveService.checkSaved(itemID) {
-            return "Favourite"
-        } else {
-            return "Nope"
-        }
-    }
 }

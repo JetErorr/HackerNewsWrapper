@@ -13,13 +13,21 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
 
     @IBOutlet weak var newsTable: UITableView! // view item
 
-    var newsViewModel: NewsViewModel! // data item
+    @IBOutlet weak var searchView: UIView!
+//
+    var searchController: UISearchController!
+
+    var filteredNews: [NewsModel] = []
+
+    public var newsViewModel: NewsViewModel! // data item
 
     var refreshControl = UIRefreshControl() // view logic item
 
     var newsModel: [NewsModel] = [] // data item
 
     var isDataLoading = false // view logic item
+
+    var emptyResult = false
 
     var firstLoad = false // view logic item
 
@@ -32,12 +40,22 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
         newsViewModel.reporterDelegate = self
         newsViewModel.fetchModel()
 
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchView.addSubview(searchController.searchBar)
+        searchController.searchBar.delegate = self
+        searchController.obscuresBackgroundDuringPresentation = false
+
+//        definesPresentationContext = true
+
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
         newsTable.addSubview(refreshControl)
 
         let name = NSNotification.Name.init("favToggle")
         NotificationCenter.default.addObserver(self, selector: #selector(reloadRows), name: name, object: nil)
+
+        filteredNews = newsModel
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -71,9 +89,32 @@ extension ViewController {
 
         for indices in self.newsModel.indices where self.newsModel[indices].newsID == newsID {
             self.newsModel[indices] = item
+//            newsTable.reloadRows(at: [indexPath], with: .none)
         }
-
         newsTable.reloadData()
+    }
+}
+
+// MARK: - Filter extension
+extension ViewController {
+    func filterNews(_ searchString: String) {
+
+        if searchString.count > 0 {
+
+            filteredNews = newsModel
+
+            let filtered = filteredNews.filter { $0.title.replacingOccurrences(of: " ", with: "").lowercased().contains(searchString.replacingOccurrences(of: " ", with: "").lowercased())
+            }
+
+            if filtered.count == 0 {
+                filteredNews.removeAll()
+                emptyResult = true
+            } else {
+                filteredNews = filtered
+            }
+
+            newsTable.reloadData()
+        }
     }
 }
 
@@ -82,10 +123,16 @@ extension ViewController {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         newsViewModel.favouriteToggled(indexPath)
+        searchController.isActive = false
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return newsModel.count
+//        if isFiltering { return filteredNews.count }
+        if searchController.isActive {
+            return filteredNews.count
+        } else {
+            return newsModel.count
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -93,14 +140,21 @@ extension ViewController {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+//
         //        swiftlint:disable force_cast
         let cell: CustomCell = tableView.dequeueReusableCell(
             withIdentifier: "newsList", for: indexPath
             ) as! CustomCell
         //         swiftlint:enable force_cast
 
-        let newsItem = newsModel[indexPath.row]
+        var newsItem: NewsModel
+
+        if searchController.isActive {
+            if emptyResult { return cell }
+            newsItem = filteredNews[indexPath.row]
+        } else {
+            newsItem = newsModel[indexPath.row]
+        }
 
         cell.newsTitle.text = newsItem.title
 
@@ -130,7 +184,7 @@ extension ViewController {
     }
 }
 
-// MARK: - Segue to DetailVC // fixme
+// MARK: - Segue to DetailVC // fixme // merge to main extension
 extension ViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
@@ -149,8 +203,36 @@ extension ViewController {
 extension ViewController: NewsReporter {
     func getNews(_ newsModel: [NewsModel]) {
         self.newsModel = newsModel
+        self.filteredNews = newsModel
         newsTable.reloadData()
         refreshControl.endRefreshing()
         isDataLoading = false
     }
+}
+
+extension ViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
+            filterNews(searchText)
+        }
+    }
+}
+
+extension ViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchController.isActive = false
+
+        if let searchText = searchBar.text {
+            filterNews(searchText)
+        }
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchController.isActive = false
+
+        if let searchText = searchBar.text, !searchText.isEmpty {
+            filteredNews = newsModel
+        }
+    }
+
 }

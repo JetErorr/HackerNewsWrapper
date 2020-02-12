@@ -19,9 +19,14 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <view key="tableHeaderView" contentMode="scaleToFill" id="UT0-6x-mFP">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="newsList" rowHeight="114" id="S1Y-bQ-vWA" customClass="CustomCell" customModule="HackerNewsWrapper" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="114"/>
+                                        <rect key="frame" x="0.0" y="72" width="414" height="114"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="S1Y-bQ-vWA" id="E1S-Ak-mGH">
                                             <rect key="frame" x="0.0" y="0.0" width="370" height="114"/>
@@ -97,6 +102,7 @@
                     <tabBarItem key="tabBarItem" title="Category Name" id="f0m-7E-RCZ" userLabel="Top Stories"/>
                     <connections>
                         <outlet property="newsTable" destination="ata-pB-ARe" id="8UQ-fs-ASz"/>
+                        <outlet property="searchView" destination="UT0-6x-mFP" id="WcQ-La-Aj0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fnf-ox-P6H" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
