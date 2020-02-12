@@ -174,12 +174,14 @@ extension ViewController {
 extension ViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
-        let height = scrollView.frame.size.height
-        let contentYoffset = scrollView.contentOffset.y
-        let distanceFromBottom = scrollView.contentSize.height - contentYoffset
-        if distanceFromBottom + 150 < height && !isDataLoading {
-            isDataLoading = true
-            newsViewModel.fetchModel()
+        if !searchController.isActive {
+            let height = scrollView.frame.size.height
+            let contentYoffset = scrollView.contentOffset.y
+            let distanceFromBottom = scrollView.contentSize.height - contentYoffset
+            if distanceFromBottom + 150 < height && !isDataLoading {
+                isDataLoading = true
+                newsViewModel.fetchModel()
+            }
         }
     }
 }
