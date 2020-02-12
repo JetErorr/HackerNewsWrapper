@@ -46,8 +46,6 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
         searchController.searchBar.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
 
-//        definesPresentationContext = true
-
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
         newsTable.addSubview(refreshControl)
@@ -70,10 +68,14 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
 extension ViewController {
 
     @objc func refresh() {
-        isDataLoading = true
-        newsModel.removeAll()
-        newsTable.reloadData()
-        newsViewModel.updateIndex()
+        if !searchController.isActive {
+            isDataLoading = true
+            newsModel.removeAll()
+            newsTable.reloadData()
+            newsViewModel.updateIndex()
+        } else {
+            refreshControl.endRefreshing()
+        }
     }
 
     @objc func reloadRows(notification: Notification) {
@@ -115,6 +117,8 @@ extension ViewController {
 
             newsTable.reloadData()
         }
+
+        filteredNews = newsModel
     }
 }
 
