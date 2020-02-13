@@ -15,6 +15,7 @@ protocol NewsReporter: class {
 
 class NewsViewModel {
 
+    var newsModel: [NewsModel] = []
     let newsService = NewsService()
     let saveService = SaveService()
     var newsIndices = [Int]()
@@ -65,8 +66,6 @@ class NewsViewModel {
         }
     }
 
-    var newsModel: [NewsModel] = []
-
     func fetchModel() {
 
         if !await {
@@ -113,7 +112,7 @@ class NewsViewModel {
             }
         }
     }
-
+// Delegate to NVM
     func favouriteToggled(_ index: IndexPath) {
         let newsID = self.newsModel[index.row].newsID
 
@@ -129,7 +128,7 @@ class NewsViewModel {
         NotificationCenter.default.post(
             name: fav,
             object: nil,
-            userInfo: ["newsID": newsID, "newsItem": newsModel[index.row]]
+            userInfo: ["newsID": newsID, "newsItem": self.newsModel[index.row]]
         )
 
         self.reporterDelegate?.getNews(self.newsModel)

@@ -112,7 +112,7 @@
         <!--Tab Bar View Controller-->
         <scene sceneID="S2P-Kw-GgQ">
             <objects>
-                <tabBarController id="ysf-Xj-CCG" customClass="TabBarViewController" customModule="HackerNewsWrapper" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarVC" id="ysf-Xj-CCG" customClass="TabBarViewController" customModule="HackerNewsWrapper" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Tlr-D7-FVB">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
