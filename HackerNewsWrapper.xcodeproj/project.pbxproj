@@ -81,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				103F4AF623EAF8F20096D998 /* HackerNewsWrapper.entitlements */,
+				10B10D5123EBE3850081AC02 /* HackerNewsWrapper.xcdatamodeld */,
 				10976BB123E1641700F484B0 /* View */,
 				10976BB023E1640700F484B0 /* ViewModel */,
 				10976BAF23E163FF00F484B0 /* Model */,
@@ -89,7 +90,6 @@
 				10040C2223DEB9F50075D12E /* LaunchScreen.storyboard */,
 				10040C1923DEB9EF0075D12E /* SceneDelegate.swift */,
 				10040C1723DEB9EF0075D12E /* AppDelegate.swift */,
-				10B10D5123EBE3850081AC02 /* HackerNewsWrapper.xcdatamodeld */,
 				10040C2523DEB9F50075D12E /* Info.plist */,
 			);
 			path = HackerNewsWrapper;

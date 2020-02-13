@@ -10,10 +10,12 @@
 import Foundation
 
 protocol NewsReporter: class {
-    func getNews(_ newsModel: [NewsModel])
+    func receiveNews(_ newsModel: [NewsModel])
 }
 
 class NewsViewModel {
+
+    weak var reporterDelegate: NewsReporter?
 
     var newsModel: [NewsModel] = []
     let newsService = NewsService()
@@ -25,16 +27,21 @@ class NewsViewModel {
     var startIdx = 0
     var endIdx = 10
 
-    weak var reporterDelegate: NewsReporter?
-
     // Local use
     let category: String
 
     // Prop Inject
     init(cat: String) {
         category = cat
-//        updateIndex()
     }
+
+    // Methods
+    // 1. Fetch Index / refresh the 500 ids
+    // 2. Fetch news models from the index / dependent on 1.
+    // 3. ToggleFav / toggle the favs for the given newsID
+    // 4. Send the newsModel / with a delegate
+    // 5. Send the newsModel / with a delegate / by a method call from the VC
+    // 6. Update VC's local view model / notify
 
     func updateIndex() {
 
@@ -60,11 +67,13 @@ class NewsViewModel {
             }
 
             myGroup.notify(queue: .main) {
+                print("Fetch complete")
                 self.await = false
                 self.fetchModel()
             }
         }
     }
+    // 1. API call for news list, empties the modelArray beforehand
 
     func fetchModel() {
 
@@ -91,12 +100,13 @@ class NewsViewModel {
                     case .success(let newsItem):
                         // Set data into Model
                         if self.newsModel.count < self.newsIndices.count {
-                            self.newsModel.append(newsItem)
+                            self.newsModel.append(newsItem)//
                         }
                         myGroup.leave()
                     }
                 }
             }
+
             myGroup.notify(queue: .main) {
 
                 // Handle if the next iteration returns an indexOutOfBounds
@@ -104,33 +114,54 @@ class NewsViewModel {
                     self.startIdx += 10
                     self.endIdx += 10
                 } else {
-//                    self.startIdx += 10
+                    //                    self.startIdx += 10//
                     self.endIdx = self.newsIndices.count
                 }
-
-                self.reporterDelegate?.getNews(self.newsModel)
+                print("Call to send model")
+                self.sendModel()
             }
         }
     }
-// Delegate to NVM
-    func favouriteToggled(_ index: IndexPath) {
-        let newsID = self.newsModel[index.row].newsID
+    // 2. API call for a news item, collect a modelArray and send to VC
+
+    func toggleFavourite(_ index: IndexPath) {
+        print("Toggling fav")
+        let newsID = newsModel[index.row].newsID
 
         if saveService.checkSaved(newsID) {
             saveService.removeFromSaved(newsID)
-            self.newsModel[index.row].saved = ""
+            newsModel[index.row].saved = ""
         } else {
             saveService.addToSaved(newsID)
-            self.newsModel[index.row].saved = "Favourite ⭐️"
+            newsModel[index.row].saved = "Favourite ⭐️"
         }
-
-        let fav = NSNotification.Name.init("favToggle")
-        NotificationCenter.default.post(
-            name: fav,
-            object: nil,
-            userInfo: ["newsID": newsID, "newsItem": self.newsModel[index.row]]
-        )
-
-        self.reporterDelegate?.getNews(self.newsModel)
     }
+    // 3. Toggle favourite state in model and core data
+
+    func favouriteToggled(_ index: IndexPath) {
+        print("Fav was toggled")
+
+        toggleFavourite(index)
+
+//        sendModel() // Change base data model
+        notifyVC(newsModel[index.row].newsID, newsModel[index.row]) // Change local data model
+    }
+    // 4. Toggle favourite state and update models
+
+    func sendModel() {
+        print("Sending model")
+        self.reporterDelegate?.receiveNews(self.newsModel)
+    }
+    // 5. Send whole model
+
+    func notifyVC(_ newsID: Int, _ newsItem: NewsModel) {
+        print("Notifying VC")
+        let msg = NSNotification.Name.init("modelChanged")
+               NotificationCenter.default.post(
+                   name: msg,
+                   object: nil,
+                   userInfo: ["newsID": newsID, "newsItem": newsItem]
+               )
+    }
+    // 6. Send 1 item
 }
