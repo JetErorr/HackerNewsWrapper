@@ -90,5 +90,8 @@ fastlane/test_output
 
 iOSInjectionProject/
 
-HackerNewsWrapper.xcodeproj/HackerNewsWrapper.xcworkspace/xcuserdata/jeet.xcuserdatad/UserInterfaceState.xcuserstate
-HackerNewsWrapper.xcworkspace/xcuserdata/jeet.xcuserdatad/UserInterfaceState.xcuserstate
+HackerNewsWrapper.xcodeproj/HackerNewsWrapper.xcworkspace/xcuserdata*
+
+HackerNewsWrapper.xcworkspace/xcuserdata/jeet.xcuserdatad/*
+
+
