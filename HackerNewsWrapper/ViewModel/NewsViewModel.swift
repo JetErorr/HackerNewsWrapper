@@ -84,7 +84,7 @@ class NewsViewModel {
 
             let myGroup = DispatchGroup()
 
-            print(startIdx, "->", endIdx-1)
+//            print(startIdx, "->", endIdx-1)
             for newsID in startIdx..<endIdx {
                 myGroup.enter()
 

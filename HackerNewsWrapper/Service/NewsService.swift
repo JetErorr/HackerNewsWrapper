@@ -17,7 +17,7 @@ class NewsService {
 
     // Get indices for new news items
     func refreshNewsList(_ category: String, completion: @escaping (Result<[Int], Error>) -> Void) {
-        print(category)
+//        print(category)
 
         if category == "saved" {
             let localID = saveService.getSavedIDs()
