@@ -13,6 +13,8 @@ import UIKit
 class SaveService {
     //swiftlint:disable force_cast
     let context = ((UIApplication.shared.delegate) as! AppDelegate).persistentContainer.viewContext
+    let entity = "NewsID"
+    let key = "savedID"
 
     func checkSaved(_ itemID: Int) -> Bool {
 
@@ -24,26 +26,26 @@ class SaveService {
     }
 
     func addToSaved(_ itemID: Int) {
-        //        print("Adding")
+//                print("Adding")
         // Add itemID to the db
 
-        let newEntry = NSEntityDescription.insertNewObject(forEntityName: "NewsID", into: context)
+        let newEntry = NSEntityDescription.insertNewObject(forEntityName: entity, into: context)
 
-        newEntry.setValue(itemID, forKey: "savedID")
+        newEntry.setValue(itemID, forKey: key)
 
         do {
             try context.save()
         } catch {
-            print("Cannot add new SavedID into the SavedID")
+            print("Cannot add ID into the SavedID")
         }
     }
 
     func removeFromSaved(_ itemID: Int) {
-        //        print("Removing")
+//                print("Removing")
         // Remove itemID from db
 
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsID")
-        fetchRequest.predicate = NSPredicate(format: "savedID == %d", itemID)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+        fetchRequest.predicate = NSPredicate(format: "\(key) == %d", itemID)
 
         do {
             let test = try context.fetch(fetchRequest)
@@ -55,9 +57,8 @@ class SaveService {
             do {
                 try context.save()
             } catch {
-                print("Cannot add new SavedID into the SavedID")
+                print("Cannot add ID into the SavedID")
             }
-
         } catch {
             print("Cannot find the deletion object")
         }
@@ -68,14 +69,14 @@ class SaveService {
 
         var ret: [Int] = []
 
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsID")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
 
         do {
             let result = try context.fetch(fetchRequest)
             var IDs = 0
             for res in result as! [NSManagedObject] {
 
-                IDs = res.value(forKey: "savedID") as! Int
+                IDs = res.value(forKey: key) as! Int
 
                 ret.append(IDs)
             }

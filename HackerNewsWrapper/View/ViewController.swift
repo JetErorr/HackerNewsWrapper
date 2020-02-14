@@ -23,27 +23,29 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
 
     var isDataLoading = false // view logic item
 
-    //    var emptyResult = false
+    var emptyResult = false
 
-        var refreshControl = UIRefreshControl() // view logic item
+    var isFiltering = false
 
-    //    var searchController: UISearchController!
+    var refreshControl = UIRefreshControl() // view logic item
 
-    //    var filteredNews: [NewsModel] = []
+//    var searchController: UISearchController!
+
+//    var filteredNews: [NewsModel] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //        searchController = UISearchController(searchResultsController: nil)
-        //        searchController.searchResultsUpdater = self
-        //        searchController.searchBar.delegate = self
-        //        searchController.obscuresBackgroundDuringPresentation = false
-        //        searchView.addSubview(searchController.searchBar)
+//        searchController = UISearchController(searchResultsController: nil)
+//        searchController.searchResultsUpdater = self
+//        searchController.searchBar.delegate = self
+//        searchController.obscuresBackgroundDuringPresentation = false
+//        searchView.addSubview(searchController.searchBar)
+//        filteredNews = newsModel
 
-                refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-                refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
-                newsTable.addSubview(refreshControl)
-        //        filteredNews = newsModel
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
+        newsTable.addSubview(refreshControl)
 
         newsTable.dataSource = self
         newsTable.delegate = self
@@ -70,26 +72,18 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
 // Delegate
 extension ViewController {
     @objc func reloadRows(notification: Notification) {
-        // receive a row
-
-        // update the received row in the local data source
-        // Updates the view data model
 
         guard let userInfo = notification.userInfo,
             let newsID = userInfo["newsID"] as? Int,
             let item = userInfo["newsItem"] as? NewsModel
-        else {
-                print("No userInfo found in notification")
+            else {
+                print("ERROR: No userInfo found in notification")
                 return
         }
 
         for index in self.newsModel.indices where self.newsModel[index].newsID == newsID {
-            print("Replacing")
             self.newsModel[index] = item
-//            newsViewModel.fetchModel()
-            newsTable.reloadData()
         }
-//        newsViewModel.sendModel()
         newsTable.reloadData()
     }
 }
@@ -99,16 +93,16 @@ extension ViewController {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         newsViewModel.favouriteToggled(indexPath)
-//        searchController.isActive = false
+//                searchController.isActive = false
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if isFiltering { return filteredNews.count }
-//        if searchController.isActive {
-//            return filteredNews.count
-//        } else {
-            return newsModel.count
-//        }
+//                if isFiltering { return filteredNews.count }
+//                if searchController.isActive {
+//                    return filteredNews.count
+//                } else {
+        return newsModel.count
+//                }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -116,21 +110,21 @@ extension ViewController {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//
+        //
         //        swiftlint:disable force_cast
         let cell: CustomCell = tableView.dequeueReusableCell(
             withIdentifier: "newsList", for: indexPath
             ) as! CustomCell
         //         swiftlint:enable force_cast
 
-//        var newsItem: NewsModel
+//                var newsItem: NewsModel
 
-//        if searchController.isActive {
-//            if emptyResult { return cell }
-//            newsItem = filteredNews[indexPath.row]
-//        } else {
+//                if searchController.isActive {
+//                    if emptyResult { return cell }
+//                    newsItem = filteredNews[indexPath.row]
+//                } else {
         let newsItem = self.newsModel[indexPath.row]
-//        }
+//                }
 
         cell.layoutIfNeeded()
 
@@ -149,16 +143,16 @@ extension ViewController {
 // MARK: - Segue to DetailVC // fixme // merge with main extension
 extension ViewController {
 
-        @objc func refresh() {
-//            if !searchController.isActive {
-                isDataLoading = true
-                newsModel.removeAll()
-                newsTable.reloadData()
-                newsViewModel.updateIndex()
-//            } else {
-                refreshControl.endRefreshing()
-//            }
-        }
+    @objc func refresh() {
+//                    if !searchController.isActive {
+        isDataLoading = true
+        newsModel.removeAll()
+        newsTable.reloadData()
+        newsViewModel.updateIndex()
+//                    } else {
+        refreshControl.endRefreshing()
+//                    }
+    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
@@ -177,9 +171,9 @@ extension ViewController {
 extension ViewController: NewsReporter {
     func receiveNews(_ newsModel: [NewsModel]) {
         self.newsModel = newsModel
-//        self.filteredNews = newsModel
+//                self.filteredNews = newsModel
         newsTable.reloadData()
-//        refreshControl.endRefreshing()
+                refreshControl.endRefreshing()
         isDataLoading = false
     }
 }
@@ -191,7 +185,7 @@ extension ViewController: NewsReporter {
 //        }
 //    }
 //}
-
+//
 //extension ViewController: UISearchBarDelegate {
 //    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 //        searchController.isActive = false
@@ -209,8 +203,8 @@ extension ViewController: NewsReporter {
 //        }
 //    }
 //}
-
-// MARK: - Filter extension
+//
+//// MARK: - Filter extension
 //extension ViewController {
 //    func filterNews(_ searchString: String) {
 //
@@ -219,8 +213,13 @@ extension ViewController: NewsReporter {
 //            filteredNews = newsModel
 //
 //            let filtered = filteredNews.filter {
-//$0.title.replacingOccurrences(of: " ", with: "").lowercased().contai
-//ns(searchString.replacingOccurrences(of: " ", with: "").lowercased())
+//                $0.title
+//                    .replacingOccurrences(of: " ", with: "")
+//                    .lowercased()
+//                    .contains(searchString
+//                    .replacingOccurrences(of: " ", with: "")
+//                    .lowercased()
+//                    )
 //            }
 //
 //            if filtered.count == 0 {
@@ -238,17 +237,17 @@ extension ViewController: NewsReporter {
 //}
 
 // MARK: - Reload when scrolled to bottom
-//extension ViewController {
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//
+extension ViewController {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
 //        if !searchController.isActive {
-//            let height = scrollView.frame.size.height
-//            let contentYoffset = scrollView.contentOffset.y
-//            let distanceFromBottom = scrollView.contentSize.height - contentYoffset
-//            if distanceFromBottom + 150 < height && !isDataLoading {
-//                isDataLoading = true
-//                newsViewModel.fetchModel()
-//            }
+            let height = scrollView.frame.size.height
+            let contentYoffset = scrollView.contentOffset.y
+            let distanceFromBottom = scrollView.contentSize.height - contentYoffset
+            if distanceFromBottom + 150 < height && !isDataLoading {
+                isDataLoading = true
+                newsViewModel.fetchModel()
+            }
 //        }
-//    }
-//}
+    }
+}

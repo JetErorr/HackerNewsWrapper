@@ -38,10 +38,9 @@ class NewsViewModel {
     // Methods
     // 1. Fetch Index / refresh the 500 ids
     // 2. Fetch news models from the index / dependent on 1.
-    // 3. ToggleFav / toggle the favs for the given newsID
-    // 4. Send the newsModel / with a delegate
-    // 5. Send the newsModel / with a delegate / by a method call from the VC
-    // 6. Update VC's local view model / notify
+    // 3. Send the newsModel / with a delegate
+    // 4. Send the newsModel / with a delegate / by a method call from the VC
+    // 5. Update VC's local view model / notify
 
     func updateIndex() {
 
@@ -67,7 +66,6 @@ class NewsViewModel {
             }
 
             myGroup.notify(queue: .main) {
-                print("Fetch complete")
                 self.await = false
                 self.fetchModel()
             }
@@ -99,7 +97,8 @@ class NewsViewModel {
                         myGroup.leave()
                     case .success(let newsItem):
                         // Set data into Model
-                        if self.newsModel.count < self.newsIndices.count {
+                        if self.newsModel.count < self.newsIndices.count
+                            && !self.saveService.checkSaved(newsID) {
                             self.newsModel.append(newsItem)//
                         }
                         myGroup.leave()
@@ -110,22 +109,22 @@ class NewsViewModel {
             myGroup.notify(queue: .main) {
 
                 // Handle if the next iteration returns an indexOutOfBounds
-                if self.endIdx + 10 < self.newsIndices.count {
+                if self.startIdx + 10 > self.newsIndices.count {
+                } else if self.endIdx + 10 < self.newsIndices.count {
                     self.startIdx += 10
                     self.endIdx += 10
                 } else {
-                    //                    self.startIdx += 10//
+                    self.startIdx += 10
                     self.endIdx = self.newsIndices.count
                 }
-                print("Call to send model")
                 self.sendModel()
             }
         }
     }
     // 2. API call for a news item, collect a modelArray and send to VC
 
-    func toggleFavourite(_ index: IndexPath) {
-        print("Toggling fav")
+    func favouriteToggled(_ index: IndexPath) {
+
         let newsID = newsModel[index.row].newsID
 
         if saveService.checkSaved(newsID) {
@@ -135,33 +134,29 @@ class NewsViewModel {
             saveService.addToSaved(newsID)
             newsModel[index.row].saved = "Favourite ⭐️"
         }
-    }
-    // 3. Toggle favourite state in model and core data
 
-    func favouriteToggled(_ index: IndexPath) {
-        print("Fav was toggled")
-
-        toggleFavourite(index)
-
-//        sendModel() // Change base data model
         notifyVC(newsModel[index.row].newsID, newsModel[index.row]) // Change local data model
+
+        if category == "saved" {
+            newsModel.remove(at: index.row)
+            sendModel()
+        }
+
     }
-    // 4. Toggle favourite state and update models
+    // 3. Toggle favourite state and update models
 
     func sendModel() {
-        print("Sending model")
         self.reporterDelegate?.receiveNews(self.newsModel)
     }
-    // 5. Send whole model
+    // 4. Send whole model
 
     func notifyVC(_ newsID: Int, _ newsItem: NewsModel) {
-        print("Notifying VC")
         let msg = NSNotification.Name.init("modelChanged")
-               NotificationCenter.default.post(
-                   name: msg,
-                   object: nil,
-                   userInfo: ["newsID": newsID, "newsItem": newsItem]
-               )
+        NotificationCenter.default.post(
+            name: msg,
+            object: nil,
+            userInfo: ["newsID": newsID, "newsItem": newsItem]
+        )
     }
-    // 6. Send 1 item
+    // 5. Send 1 item for UI change
 }
