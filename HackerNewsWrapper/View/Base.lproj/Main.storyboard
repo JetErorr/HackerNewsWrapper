@@ -20,7 +20,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="newsList" rowHeight="100" id="S1Y-bQ-vWA" customClass="CustomCell" customModule="HackerNewsWrapper" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="newsList" id="S1Y-bQ-vWA" customClass="CustomCell" customModule="HackerNewsWrapper" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="S1Y-bQ-vWA" id="E1S-Ak-mGH">
@@ -93,21 +93,7 @@
                             <view contentMode="scaleToFill" id="UT0-6x-mFP">
                                 <rect key="frame" x="0.0" y="44" width="414" height="52"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SearchBar Container" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTr-PU-SrB">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="52"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <constraints>
-                                    <constraint firstItem="hTr-PU-SrB" firstAttribute="leading" secondItem="UT0-6x-mFP" secondAttribute="leading" id="GBz-Gf-Ul4"/>
-                                    <constraint firstAttribute="bottom" secondItem="hTr-PU-SrB" secondAttribute="bottom" id="WuA-qu-rzn"/>
-                                    <constraint firstAttribute="trailing" secondItem="hTr-PU-SrB" secondAttribute="trailing" id="f17-6k-cq8"/>
-                                    <constraint firstItem="hTr-PU-SrB" firstAttribute="top" secondItem="UT0-6x-mFP" secondAttribute="top" id="t8Y-Hn-9k4"/>
-                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>

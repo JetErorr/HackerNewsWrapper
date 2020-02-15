@@ -8,8 +8,7 @@
 
 import UIKit
 
-class ViewController:
-UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarControllerDelegate {
+class ViewController: UIViewController, UITabBarControllerDelegate {
 
     @IBOutlet weak var newsTable: UITableView! // view item
     @IBOutlet weak var searchView: UIView! // view item
@@ -23,7 +22,6 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
 
     var newsViewModel: NewsViewModel! // data item
     var newsModel: [NewsModel] = [] // data item
-    var displayModel: [NewsModel] = [] // data item
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,47 +63,40 @@ UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarController
             let controller = segue.destination as! DetailViewController
             if let indexPath = newsTable.indexPath(for: sender as! UITableViewCell) {
                 //swiftlint:enable force_cast
-                controller.newsModel = displayModel[indexPath.row]
+                controller.newsModel = newsModel[indexPath.row]
             }
         }
     }
 }
 
 // MARK: - Table methods
-extension ViewController {
+extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        newsViewModel.favouriteToggled(indexPath)
-        searchController.isActive = false
+        newsViewModel.favouriteToggled(newsModel[indexPath.row].newsID)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if isFiltering { return filteredModel.count }
-//        if searchController.isActive {
-//            return filteredNews.count
-//        } else {
-            return displayModel.count
-//        }
+        return newsModel.count
     }
 
     //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     //        return UITableView.automaticDimension
     //    }
+    //
+    //    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    //        return UITableView.automaticDimension
+    //    }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //
+
         //        swiftlint:disable force_cast
         let cell: CustomCell = tableView.dequeueReusableCell(
             withIdentifier: "newsList", for: indexPath
             ) as! CustomCell
         //         swiftlint:enable force_cast
 
-//        if searchController.isActive {
-//            if emptyResult { return cell }
-//            newsItem = filteredNews[indexPath.row]
-//        } else {
-        let newsItem = displayModel[indexPath.row]
-//        }
+        let newsItem = newsModel[indexPath.row]
 
         cell.layoutIfNeeded()
 
@@ -113,7 +104,7 @@ extension ViewController {
 
         cell.newsTime.text = String(newsItem.since)
 
-        //        cell.newsDesc.text = newsItem.desc
+        cell.newsDesc.text = newsItem.desc
 
         cell.newsSaved.text = newsItem.saved
 
@@ -137,15 +128,13 @@ extension ViewController {
             self.newsModel[index] = item
         }
 
-        displayModel = newsModel
-
         newsTable.reloadData()
     }
 
     @objc func refresh() {
         if !searchController.isActive {
             isDataLoading = true
-            newsModel.removeAll()//
+            newsModel.removeAll()
             newsTable.reloadData()
             newsViewModel.updateIndex()
         } else {
@@ -174,7 +163,6 @@ extension ViewController {
 extension ViewController: NewsReporter {
     func receiveNews(_ newsModel: [NewsModel]) {
         self.newsModel = newsModel
-        self.displayModel = newsModel
         newsTable.reloadData()
         refreshControl.endRefreshing()
         isDataLoading = false
@@ -185,7 +173,7 @@ extension ViewController: NewsReporter {
 extension ViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
-            filterNews(searchText)
+            newsViewModel.filterNews(true, searchText)
         }
     }
 }
@@ -195,43 +183,12 @@ extension ViewController: UISearchBarDelegate {
         searchController.isActive = true
 
         if let searchText = searchBar.text {
-            filterNews(searchText)
+            newsViewModel.filterNews(true, searchText)
         }
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchController.isActive = false
-    }
-}
-
-extension ViewController {
-    func filterNews(_ searchString: String) {
-
-        displayModel = newsModel
-        if searchString.count != 0 {
-
-            // Get a fresh copy of the full data
-            displayModel = newsModel
-
-            let filteredModel = displayModel.filter {
-                $0.title
-                    //                    .replacingOccurrences(of: " ", with: "")
-                    .lowercased()
-                    .contains(searchString
-                        //                        .replacingOccurrences(of: " ", with: "")
-                        .lowercased()
-                )
-            }
-
-            if filteredModel.count == 0 {
-                displayModel.removeAll()
-            } else {
-                displayModel = filteredModel
-            }
-
-        } else {
-            displayModel = newsModel
-        }
-        newsTable.reloadData()
+        newsViewModel.filterNews(false, "")
     }
 }

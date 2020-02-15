@@ -117,36 +117,61 @@ class NewsViewModel {
                     self.startIdx += 10
                     self.endIdx = self.newsIndices.count
                 }
-                self.sendModel()
+                self.sendModel(self.newsModel)
             }
         }
     }
     // 2. API call for a news item, collect a modelArray and send to VC
 
-    func favouriteToggled(_ index: IndexPath) {
+    func favouriteToggled(_ newsID: Int) {
 
-        let newsID = newsModel[index.row].newsID
+        var changeIndex: Int = 0
+
+        for index in newsModel.indices where newsModel[index].newsID == newsID {
+            changeIndex = index
+            break
+        }
 
         if saveService.checkSaved(newsID) {
             saveService.removeFromSaved(newsID)
-            newsModel[index.row].saved = ""
+            newsModel[changeIndex].saved = ""
         } else {
             saveService.addToSaved(newsID)
-            newsModel[index.row].saved = "Favourite ⭐️"
+            newsModel[changeIndex].saved = "Favourite ⭐️"
         }
 
-        notifyVC(newsModel[index.row].newsID, newsModel[index.row]) // Change local data model
+        notifyVC(newsModel[changeIndex].newsID, newsModel[changeIndex])
 
         if category == "saved" {
-            newsModel.remove(at: index.row)
-            sendModel()
+            newsModel.remove(at: changeIndex)
+            sendModel(self.newsModel)
         }
 
     }
     // 3. Toggle favourite state and update models
 
-    func sendModel() {
-        self.reporterDelegate?.receiveNews(self.newsModel)
+    func filterNews(_ isFiltering: Bool, _ searchString: String) {
+
+        if isFiltering && searchString.count != 0 {
+
+            let filteredModel = newsModel.filter {
+                $0.title
+                    //                    .replacingOccurrences(of: " ", with: "")
+                    .lowercased()
+                    .contains(searchString
+                        //                        .replacingOccurrences(of: " ", with: "")
+                        .lowercased()
+                )
+            }
+            sendModel(filteredModel)
+        } else {
+            sendModel(newsModel)
+        }
+    }
+    // X. Send back the filtered newsModel
+
+    func sendModel(_ newsModel: [NewsModel]) {
+        self.reporterDelegate?.receiveNews(newsModel)
     }
     // 4. Send whole model
 
