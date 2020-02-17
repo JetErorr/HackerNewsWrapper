@@ -72,6 +72,7 @@ class ViewController: UIViewController, UITabBarControllerDelegate {
             if let indexPath = newsTable.indexPath(for: sender as! UITableViewCell) {
                 //swiftlint:enable force_cast
                 controller.newsModel = newsModel[indexPath.row]
+                controller.newsViewModel = newsViewModel
             }
         }
     }

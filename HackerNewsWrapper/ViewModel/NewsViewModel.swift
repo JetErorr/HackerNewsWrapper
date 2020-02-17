@@ -8,6 +8,7 @@
 
 // ViewModel for the MVVM pattern
 import Foundation
+import UIKit
 
 protocol NewsReporter: class {
     func receiveNews(_ newsModel: [NewsModel])
@@ -168,12 +169,12 @@ class NewsViewModel {
             sendModel(newsModel)
         }
     }
-    // X. Send back the filtered newsModel
+    // 4. Send back the filtered newsModel
 
     func sendModel(_ newsModel: [NewsModel]) {
         self.reporterDelegate?.receiveNews(newsModel)
     }
-    // 4. Send whole model
+    // 5. Send whole model
 
     func notifyVC(_ newsID: Int, _ newsItem: NewsModel) {
         let msg = NSNotification.Name.init("modelChanged")
@@ -183,5 +184,40 @@ class NewsViewModel {
             userInfo: ["newsID": newsID, "newsItem": newsItem]
         )
     }
-    // 5. Send 1 item for UI change
+    // 6. Send 1 item for UI change
+
+    func openStory(_ target: String, _ mode: String = "") {
+
+//        let newsURLString = "https://hacker-news.firebaseio.com/v0/item/\.json"
+        //        let newsURLString = "https://hacker-news.firebaseio.com/v0/item/22200229.json"
+
+//        guard let newsURL = URL(string: newsURLString) else {
+//            print("ERROR: Invalid news URL")
+//            return
+//        }
+        let url: URL
+
+        switch mode {
+
+        case "article":
+            if let articleURL = URL(string: "https://news.ycombinator.com/item?id=\(target)") {
+                url = articleURL
+            } else { return }
+
+        case "author":
+            if let authorURL = URL(string: "https://news.ycombinator.com/user?id=\(target)") {
+                url = authorURL
+            } else { return }
+
+        default:
+            if let directURL = URL(string: target) {
+                url = directURL
+            } else { return }
+        }
+
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
+    // 7. Open the URL with the default browser
 }

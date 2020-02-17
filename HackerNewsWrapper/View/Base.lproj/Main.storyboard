@@ -175,10 +175,16 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2nw-K8-9J8">
                                                 <rect key="frame" x="0.0" y="0.0" width="199" height="30"/>
                                                 <state key="normal" title="Author"/>
+                                                <connections>
+                                                    <action selector="newsAuthor:" destination="tWi-5U-vAT" eventType="touchUpInside" id="uaI-fz-P7X"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GsP-Pa-hxr">
                                                 <rect key="frame" x="0.0" y="30" width="199" height="30"/>
                                                 <state key="normal" title="HNArticle"/>
+                                                <connections>
+                                                    <action selector="newsArticle:" destination="tWi-5U-vAT" eventType="touchUpInside" id="AQB-fN-O3W"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dKO-Lh-TPM">
                                                 <rect key="frame" x="0.0" y="60" width="199" height="30"/>
@@ -186,6 +192,9 @@
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.borderWidth number 1" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="newsURL:" destination="tWi-5U-vAT" eventType="touchUpInside" id="las-8f-Rpf"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>

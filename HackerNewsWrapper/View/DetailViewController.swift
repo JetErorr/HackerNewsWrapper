@@ -12,9 +12,27 @@ import UIKit
 class DetailViewController: UIViewController {
 
     var newsModel: NewsModel!
+    var newsViewModel: NewsViewModel!
 
     @IBOutlet weak var newsTitle: UILabel!
     @IBOutlet weak var newsDesc: UILabel!
+
+    @IBAction func newsAuthor(_ sender: Any) {
+        newsViewModel.openStory(newsModel.author, "author")
+    }
+
+    @IBAction func newsArticle(_ sender: Any) {
+        if let model = newsModel {
+            newsViewModel.openStory("\(model.newsID)", "article")
+        } else { print("Error opening the linked url page") }
+    }
+
+    @IBAction func newsURL(_ sender: Any) {
+        if let url = newsModel.url {
+            newsViewModel.openStory(url)
+        } else { print("Error opening the linked url page") }
+    }
+
     @IBOutlet weak var newsAuthor: UIButton!
     @IBOutlet weak var newsArticle: UIButton!
     @IBOutlet weak var newsURL: UIButton!
