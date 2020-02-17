@@ -12,24 +12,24 @@ import UIKit
 class DetailViewController: UIViewController {
 
     var newsModel: NewsModel!
-    var newsViewModel: NewsViewModel!
+    var detailViewModel = DetailViewModel()
 
     @IBOutlet weak var newsTitle: UILabel!
     @IBOutlet weak var newsDesc: UILabel!
 
     @IBAction func newsAuthor(_ sender: Any) {
-        newsViewModel.openStory(newsModel.author, "author")
+        detailViewModel.openStory(newsModel.author, "author")
     }
 
     @IBAction func newsArticle(_ sender: Any) {
         if let model = newsModel {
-            newsViewModel.openStory("\(model.newsID)", "article")
+            detailViewModel.openStory("\(model.newsID)", "article")
         } else { print("Error opening the linked url page") }
     }
 
     @IBAction func newsURL(_ sender: Any) {
         if let url = newsModel.url {
-            newsViewModel.openStory(url)
+            detailViewModel.openStory(url)
         } else { print("Error opening the linked url page") }
     }
 
