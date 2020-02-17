@@ -32,8 +32,8 @@ DerivedData/
 *.dSYM
 
 ## Playgrounds
-timeline.xctimeline
-playground.xcworkspace
+HackerNewsWrapper/timeline.xctimeline
+HackerNewsWrapper/playground.xcworkspace
 
 # Swift Package Manager
 #
@@ -89,7 +89,5 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
-
 *.xcuserstate
-
 HackerNewsWrapper.xcworkspace/xcuserdata/jeet.xcuserdatad/UserInterfaceState.xcuserstate

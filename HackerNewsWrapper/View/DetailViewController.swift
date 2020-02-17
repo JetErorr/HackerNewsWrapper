@@ -28,7 +28,7 @@ class DetailViewController: UIViewController {
         newsDesc.text = newsModel.desc
         newsAuthor.setTitle(newsModel.author, for: .normal)
         newsArticle.setTitle(newsModel.article, for: .normal)
-        newsURL.titleLabel?.text = newsModel.url
+        newsURL.setTitle(newsModel.url, for: .normal)
         newsScore.text = "Points: \(newsModel.score)"
         newsComments.text = "Comments: \(newsModel.kids!.count)"
     }
