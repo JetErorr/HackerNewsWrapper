@@ -26,6 +26,13 @@ class ViewController: UIViewController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        #if DEV
+        print("Development Version")
+        print("The data for description text label has been disabled to check for row height consistency")
+        #else
+        print("Release Version")
+        #endif
+
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
@@ -39,6 +46,7 @@ class ViewController: UIViewController, UITabBarControllerDelegate {
         newsTable.dataSource = self
         newsTable.delegate = self
         newsViewModel.reporterDelegate = self
+        newsTable.keyboardDismissMode = .onDrag
         newsViewModel.fetchModel()
 
         // Delegate
@@ -74,6 +82,9 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         newsViewModel.favouriteToggled(newsModel[indexPath.row].newsID)
+        #if DEV
+        print("Favourite toggled")
+        #endif
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -104,7 +115,9 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
         cell.newsTime.text = String(newsItem.since)
 
+        #if !DEV
         cell.newsDesc.text = newsItem.desc
+        #endif
 
         cell.newsSaved.text = newsItem.saved
 
@@ -132,6 +145,9 @@ extension ViewController {
     }
 
     @objc func refresh() {
+        #if DEV
+        print("Refreshing")
+        #endif
         if !searchController.isActive {
             isDataLoading = true
             newsModel.removeAll()
@@ -140,13 +156,19 @@ extension ViewController {
         } else {
             refreshControl.endRefreshing()
         }
+        #if DEV
+        print("Done refreshing")
+        #endif
     }
 }
 
 // MARK: - Reload when scrolled to bottom
 extension ViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-
+        #if DEV
+        print("Scrolled to bottom")
+        print("Loading 10 new entries")
+        #endif
         if !searchController.isActive {
             let height = scrollView.frame.size.height
             let contentYoffset = scrollView.contentOffset.y
@@ -156,12 +178,18 @@ extension ViewController {
                 newsViewModel.fetchModel()
             }
         }
+        #if DEV
+        print("Done loading")
+        #endif
     }
 }
 
 // MARK: - Callback method to update local newsModel
 extension ViewController: NewsReporter {
     func receiveNews(_ newsModel: [NewsModel]) {
+        #if DEV
+        print("Received updated news model")
+        #endif
         self.newsModel = newsModel
         newsTable.reloadData()
         refreshControl.endRefreshing()
@@ -172,7 +200,13 @@ extension ViewController: NewsReporter {
 // MARK: - Search bar delegates and methods
 extension ViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
+        #if DEV
+        print("Changed search string")
+        #endif
         if let searchText = searchController.searchBar.text {
+            #if DEV
+            print(searchText)
+            #endif
             newsViewModel.filterNews(true, searchText)
         }
     }
@@ -180,6 +214,9 @@ extension ViewController: UISearchResultsUpdating {
 
 extension ViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        #if DEV
+        print("Search clicked")
+        #endif
         searchController.isActive = true
 
         if let searchText = searchBar.text {
@@ -188,6 +225,9 @@ extension ViewController: UISearchBarDelegate {
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        #if DEV
+        print("Search Cancel clicked")
+        #endif
         searchController.isActive = false
         newsViewModel.filterNews(false, "")
     }

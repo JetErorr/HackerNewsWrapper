@@ -46,7 +46,7 @@ struct NewsModel: Codable {
 
         if let desc = desc {
             self.desc = desc
-        } else { self.desc = "" }
+        } else { self.desc = "No description provided" }
 
         self.author = author
 
@@ -60,7 +60,7 @@ struct NewsModel: Codable {
 
         if let url = url {
             self.url = url
-        } else { self.url = "" }
+        } else { self.url = "No URL provided" }
 
         self.newsID = newsID
 
