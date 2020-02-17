@@ -237,13 +237,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="qab-xb-t9d"/>
                     <connections>
-                        <outlet property="newsArticle" destination="GsP-Pa-hxr" id="e0M-md-0MX"/>
-                        <outlet property="newsAuthor" destination="2nw-K8-9J8" id="Gox-4h-zyx"/>
+                        <outlet property="newsArticle" destination="GsP-Pa-hxr" id="xGa-G7-8uS"/>
+                        <outlet property="newsAuthor" destination="2nw-K8-9J8" id="tPk-4A-upS"/>
                         <outlet property="newsComments" destination="5Qe-nX-Lpg" id="rBp-aL-8hB"/>
                         <outlet property="newsDesc" destination="PSu-IS-Nhj" id="cbl-Nq-zdM"/>
                         <outlet property="newsScore" destination="H8w-WG-oNi" id="0SC-eE-6vA"/>
                         <outlet property="newsTitle" destination="9Aj-Tb-ihr" id="bV1-gy-wzg"/>
-                        <outlet property="newsURL" destination="dKO-Lh-TPM" id="CAB-LX-2Z2"/>
+                        <outlet property="newsURL" destination="dKO-Lh-TPM" id="c5c-JB-z3H"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fNW-Kp-DWL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

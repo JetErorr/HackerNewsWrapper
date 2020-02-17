@@ -12,24 +12,22 @@ import UIKit
 class DetailViewController: UIViewController {
 
     var newsModel: NewsModel!
-    var newsViewModel: NewsViewModel!
+    var detailViewModel = DetailViewModel()
 
     @IBOutlet weak var newsTitle: UILabel!
     @IBOutlet weak var newsDesc: UILabel!
 
     @IBAction func newsAuthor(_ sender: Any) {
-        newsViewModel.openStory(newsModel.author, "author")
+        present(detailViewModel.openStory(newsModel.author, "author"), animated: true, completion: nil)
     }
 
     @IBAction func newsArticle(_ sender: Any) {
-        if let model = newsModel {
-            newsViewModel.openStory("\(model.newsID)", "article")
-        } else { print("Error opening the linked url page") }
+        present(detailViewModel.openStory("\(newsModel.newsID)", "article"), animated: true, completion: nil)
     }
 
     @IBAction func newsURL(_ sender: Any) {
         if let url = newsModel.url {
-            newsViewModel.openStory(url)
+            present(detailViewModel.openStory(url), animated: true, completion: nil)
         } else { print("Error opening the linked url page") }
     }
 
@@ -45,7 +43,7 @@ class DetailViewController: UIViewController {
         newsTitle.text = newsModel.title
         newsDesc.text = newsModel.desc
         newsAuthor.setTitle(newsModel.author, for: .normal)
-        newsArticle.setTitle(newsModel.article, for: .normal)
+        newsArticle.setTitle("\(newsModel.newsID)", for: .normal)
         newsURL.setTitle(newsModel.url, for: .normal)
         newsScore.text = "Points: \(newsModel.score)"
         newsComments.text = "Comments: \(newsModel.kids!.count)"

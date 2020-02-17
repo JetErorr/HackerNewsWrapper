@@ -23,7 +23,6 @@ struct NewsModel: Codable {
 
     var saved: String = String()
     var newsID: Int = Int()
-    var article: String? = String()
     var since: String = String()
 
     enum CodingKeys: String, CodingKey {
@@ -37,7 +36,7 @@ struct NewsModel: Codable {
     }
 
     init(_ title: String, _ desc: String?, _ author: String, _ time: Double, _ score: Int,
-         _ kids: [Int]?, _ newsID: Int, _ url: String?, _ article: String, _ saveState: Bool) {
+         _ kids: [Int]?, _ newsID: Int, _ url: String?, _ saveState: Bool) {
 
         dateFormatter.dateStyle = .short
         dateFormatter.timeStyle = .none
@@ -63,8 +62,6 @@ struct NewsModel: Codable {
         } else { self.url = "No URL provided" }
 
         self.newsID = newsID
-
-        self.article = article
 
         if saveState {
             self.saved = "Favourite ⭐️"
