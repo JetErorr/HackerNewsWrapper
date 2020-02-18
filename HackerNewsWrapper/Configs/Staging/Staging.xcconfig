@@ -1,0 +1,13 @@
+//
+//  Staging.xcconfig
+//  HackerNewsWrapper
+//
+//  Created by Jeet on 18/02/20.
+//  Copyright © 2020 Jeet. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+XCC_BUNDLE_NAME = Staged HN Wrapper
+XCC_CONFIG_PATH = Staging/Config.plist
