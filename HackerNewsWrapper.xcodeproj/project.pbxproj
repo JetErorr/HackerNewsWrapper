@@ -58,8 +58,8 @@
 		106A43D56A9AF07D46F674A7 /* Pods-HackerNewsWrapper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HackerNewsWrapper.debug.xcconfig"; path = "Target Support Files/Pods-HackerNewsWrapper/Pods-HackerNewsWrapper.debug.xcconfig"; sourceTree = "<group>"; };
 		10976BAD23E15E7900F484B0 /* NewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewModel.swift; sourceTree = "<group>"; };
 		10A65C0923F55C4B00C4DA07 /* HackerNewsWrapper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HackerNewsWrapper.xcdatamodel; sourceTree = "<group>"; };
-		10AE42D023FAAAF300198851 /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = SOURCE_ROOT; };
-		10AE42D323FAAE9300198851 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebViewController.swift; path = HackerNewsWrapper/ViewModel/WebViewController.swift; sourceTree = SOURCE_ROOT; };
+		10AE42D023FAAAF300198851 /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DetailViewModel.swift; path = HackerNewsWrapper/ViewModel/DetailViewModel.swift; sourceTree = SOURCE_ROOT; };
+		10AE42D323FAAE9300198851 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebViewController.swift; path = HackerNewsWrapper/View/WebViewController.swift; sourceTree = SOURCE_ROOT; };
 		10B10D5623EBF9660081AC02 /* SaveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveService.swift; sourceTree = "<group>"; };
 		10C9999423E43E42008BEED3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = HackerNewsWrapper/View/ViewController.swift; sourceTree = SOURCE_ROOT; };
 		10C9999823E454D7008BEED3 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
