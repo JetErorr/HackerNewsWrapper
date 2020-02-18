@@ -17,18 +17,14 @@ class NewsService {
 
     // Get indices for new news items
     func refreshNewsList(_ category: String, completion: @escaping (Result<[Int], Error>) -> Void) {
-//        print(category)
 
         if category == "saved" {
             let localID = saveService.getSavedIDs()
             print(localID.count, "Favourites")
-//            if localID.count != 0 {
                 completion(.success(localID))
-//            }
         } else {
 
             // URL for getting top 500 news IDs
-            // Add Configurable code for things like New, Best, Job Stories, Ask, Show, etc and other things
             let indexURLString = "https://hacker-news.firebaseio.com/v0/\(category).json"
             guard let indexURL = URL(string: indexURLString) else {
                 print("ERROR: Invalid index URL")
@@ -48,7 +44,6 @@ class NewsService {
                     do {
                         let index = try self.decoder.decode([Int].self, from: data)
                         completion(.success(index))
-                        //                    print(index) //debug
 
                     } catch {
 
@@ -68,7 +63,6 @@ class NewsService {
 
         // Insert newsID index in the newsURL
         let newsURLString = "https://hacker-news.firebaseio.com/v0/item/\(newsID).json"
-        //        let newsURLString = "https://hacker-news.firebaseio.com/v0/item/22200229.json"
 
         guard let newsURL = URL(string: newsURLString) else {
             print("ERROR: Invalid news URL")

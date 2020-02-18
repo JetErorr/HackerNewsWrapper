@@ -26,7 +26,6 @@ class SaveService {
     }
 
     func addToSaved(_ itemID: Int) {
-//                print("Adding")
         // Add itemID to the db
 
         let newEntry = NSEntityDescription.insertNewObject(forEntityName: entity, into: context)
@@ -41,7 +40,6 @@ class SaveService {
     }
 
     func removeFromSaved(_ itemID: Int) {
-//                print("Removing")
         // Remove itemID from db
 
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)

@@ -7,30 +7,38 @@
 //
 
 import Foundation
-import UIKit
+import WebKit
 
-class DetailViewController: UIViewController {
+class DetailViewController: UIViewController, WKNavigationDelegate {
 
     var newsModel: NewsModel!
-    var newsViewModel: NewsViewModel!
+    var detailVM = DetailViewModel()
+//    swiftlint:disable force_cast
+    let webVC = UIStoryboard(name: "Main", bundle: nil)
+        .instantiateViewController(withIdentifier: "WebVC") as! WebViewController
+//    swiftlint:enable force_cast
 
     @IBOutlet weak var newsTitle: UILabel!
     @IBOutlet weak var newsDesc: UILabel!
 
     @IBAction func newsAuthor(_ sender: Any) {
-        newsViewModel.openStory(newsModel.author, "author")
+
+        webVC.url = detailVM.openStory(newsModel.author, "author")
+        showURL()
     }
 
     @IBAction func newsArticle(_ sender: Any) {
         if let model = newsModel {
-            newsViewModel.openStory("\(model.newsID)", "article")
-        } else { print("Error opening the linked url page") }
+            webVC.url = detailVM.openStory("\(model.newsID)", "article")
+            showURL()
+        }
     }
 
     @IBAction func newsURL(_ sender: Any) {
         if let url = newsModel.url {
-            newsViewModel.openStory(url)
-        } else { print("Error opening the linked url page") }
+            webVC.url = detailVM.openStory(url)
+            showURL()
+        }
     }
 
     @IBOutlet weak var newsAuthor: UIButton!
@@ -49,5 +57,9 @@ class DetailViewController: UIViewController {
         newsURL.setTitle(newsModel.url, for: .normal)
         newsScore.text = "Points: \(newsModel.score)"
         newsComments.text = "Comments: \(newsModel.kids!.count)"
+    }
+
+    func showURL() {
+        present(webVC, animated: true, completion: nil)
     }
 }

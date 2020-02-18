@@ -72,7 +72,6 @@ class ViewController: UIViewController, UITabBarControllerDelegate {
             if let indexPath = newsTable.indexPath(for: sender as! UITableViewCell) {
                 //swiftlint:enable force_cast
                 controller.newsModel = newsModel[indexPath.row]
-                controller.newsViewModel = newsViewModel
             }
         }
     }
@@ -91,14 +90,6 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return newsModel.count
     }
-
-    //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    //        return UITableView.automaticDimension
-    //    }
-    //
-    //    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-    //        return UITableView.automaticDimension
-    //    }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 

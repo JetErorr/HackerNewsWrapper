@@ -250,5 +250,21 @@
             </objects>
             <point key="canvasLocation" x="3541" y="-921"/>
         </scene>
+        <!--Web View Controller-->
+        <scene sceneID="a7p-F2-vvi">
+            <objects>
+                <viewController storyboardIdentifier="WebVC" id="dlu-XI-RYl" customClass="WebViewController" customModule="HackerNewsWrapper" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ZDF-Im-qH4">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="E7D-89-iwc"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="iR6-Ug-1uj"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AZe-qU-7T7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4357" y="-916"/>
+        </scene>
     </scenes>
 </document>
